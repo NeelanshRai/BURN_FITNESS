@@ -1,0 +1,7 @@
+{
+  "name": "BURN",
+  "description": "Metabolic and progressive performance workout tracking app with 7-day splits, comprehensive exercise database, daily weight tracking, and AI-powered 150+ word workout summaries.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
