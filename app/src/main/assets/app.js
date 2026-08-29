@@ -861,39 +861,39 @@ Return ONLY raw JSON with keys "calories" (number), "targetedMuscles" (array of 
     const userName = (state.profile?.name || "GUEST").toUpperCase();
 
     root.innerHTML = `
-      <div class="min-h-screen max-w-lg mx-auto px-4 bg-black text-white flex flex-col justify-between selection:bg-[#042854]">
+      <div class="min-h-screen max-w-lg mx-auto px-3.5 sm:px-4 bg-black text-white flex flex-col justify-between selection:bg-[#042854]">
         
         <!-- Header -->
-        <header class="pt-5 pb-3.5 shrink-0 flex items-center justify-between border-b border-zinc-900">
-          <div class="flex items-center gap-3">
-            <img src="./app_logo.jpg" alt="BURN Logo" class="w-10 h-10 rounded-xl border border-zinc-800 object-cover shadow-md shadow-blue-950/30" />
+        <header class="py-2.5 shrink-0 flex items-center justify-between gap-2 border-b border-zinc-900">
+          <div class="flex items-center gap-2.5 shrink-0">
+            <img src="./app_logo.jpg" alt="BURN Logo" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-zinc-800 object-cover shadow-sm" />
             <div>
-              <h1 class="text-2xl font-black tracking-tighter text-white leading-none">BURN</h1>
-              <p class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest mt-0.5">METABOLIC WORKOUT ENGINE</p>
+              <h1 class="text-xl sm:text-2xl font-black tracking-tighter text-white leading-none">BURN</h1>
+              <p class="text-[8px] sm:text-[9px] font-bold text-zinc-500 uppercase tracking-wider mt-0.5">METABOLIC ENGINE</p>
             </div>
           </div>
 
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-1.5 shrink-0">
             <!-- 30-Day History Button -->
-            <button data-a="open-history" class="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full hover:border-zinc-700 transition" title="View 30-Day Activity History">
-              <svg class="w-3.5 h-3.5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <button data-a="open-history" class="flex items-center gap-1 bg-zinc-900 border border-zinc-800 px-2.5 py-1.5 rounded-full hover:border-zinc-700 transition" title="View 30-Day Activity History">
+              <svg class="w-3 h-3 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
               </svg>
-              <span class="text-[11px] font-bold text-zinc-300 uppercase tracking-wider">30D LOGS</span>
+              <span class="text-[10px] font-bold text-zinc-300 uppercase tracking-wider">30D LOGS</span>
             </button>
 
             <!-- Profile Badge -->
             ${state.profile ? `
-              <button data-a="open-profile" class="flex items-center gap-1.5 bg-zinc-900 border border-zinc-800 px-3 py-1.5 rounded-full hover:border-zinc-700 transition">
-                <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
-                <span class="text-[11px] font-bold text-zinc-300 tracking-wider">${escapeHtml(userName)}</span>
+              <button data-a="open-profile" class="flex items-center gap-1 bg-zinc-900 border border-zinc-800 px-2.5 py-1.5 rounded-full hover:border-zinc-700 transition max-w-[100px]">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shrink-0"></span>
+                <span class="text-[10px] font-bold text-zinc-300 tracking-wider truncate">${escapeHtml(userName)}</span>
               </button>
             ` : ""}
           </div>
         </header>
 
         <!-- Main Step View -->
-        <main class="flex-1 flex flex-col py-4">
+        <main class="flex-1 flex flex-col py-3 overflow-y-auto">
           ${renderStep(currentW)}
         </main>
 
@@ -966,9 +966,9 @@ Return ONLY raw JSON with keys "calories" (number), "targetedMuscles" (array of 
         const isSelected = d.dayNum === state.selectedDayNum;
         return `
           <button data-a="select-day" data-day="${d.dayNum}"
-            class="px-3 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition shrink-0 ${
+            class="py-2 px-0 text-center rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider transition w-full ${
               isSelected
-                ? "bg-blue-900/60 text-blue-300 border border-blue-600/60 shadow-sm"
+                ? "bg-blue-900/70 text-blue-200 border border-blue-500 shadow-sm"
                 : "bg-zinc-900/80 text-zinc-400 border border-zinc-800 hover:border-zinc-700"
             }">
             ${d.dayName.slice(0, 3)}
@@ -977,39 +977,39 @@ Return ONLY raw JSON with keys "calories" (number), "targetedMuscles" (array of 
       }).join("");
 
       return `
-        <div class="fade-step flex flex-col justify-between flex-1 space-y-6 py-2">
-          <div class="space-y-5">
-            <!-- Day Pill Selector -->
+        <div class="fade-step flex flex-col justify-between flex-1 space-y-4 py-1">
+          <div class="space-y-4">
+            <!-- Day Selector 7-Grid -->
             <div>
-              <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-2">7-DAY WORKOUT SPLIT</p>
-              <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+              <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">7-DAY WORKOUT SPLIT</p>
+              <div class="grid grid-cols-7 gap-1 sm:gap-1.5 w-full">
                 ${dayButtons}
               </div>
             </div>
 
             <!-- Greeting Header -->
-            <div class="space-y-4 pt-1">
-              <div class="flex items-center gap-3.5">
-                <img src="./app_logo.jpg" alt="Physique Emblem" class="w-16 h-16 rounded-2xl border border-zinc-800 object-cover shadow-lg shadow-blue-950/40 shrink-0" />
-                <div>
-                  <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">PERFORMANCE ENGINE</p>
-                  <h2 class="text-2xl sm:text-3xl font-black tracking-tight leading-tight uppercase text-white">
+            <div class="space-y-3 pt-1">
+              <div class="flex items-center gap-3">
+                <img src="./app_logo.jpg" alt="Physique Emblem" class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl border border-zinc-800 object-cover shadow-md shrink-0" style="width: 52px; height: 52px;" />
+                <div class="min-w-0 flex-1">
+                  <p class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">PERFORMANCE ENGINE</p>
+                  <h2 class="text-xl sm:text-2xl font-black tracking-tight leading-tight uppercase text-white break-words">
                     HELLO ${escapeHtml(userName)},<br/>
                     IT'S <span class="text-blue-400">${escapeHtml(workout.title)}</span>
                   </h2>
                 </div>
               </div>
               
-              <div class="p-4 bg-zinc-900/70 border border-zinc-800/80 rounded-2xl space-y-1.5">
-                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">SCHEDULED FOCUS</p>
-                <p class="text-2xl font-black text-white uppercase tracking-tight">${escapeHtml(workout.muscleGroup)}</p>
+              <div class="p-3.5 bg-zinc-900/70 border border-zinc-800/80 rounded-2xl space-y-1">
+                <p class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">SCHEDULED FOCUS</p>
+                <p class="text-xl font-black text-white uppercase tracking-tight">${escapeHtml(workout.muscleGroup)}</p>
                 <p class="text-xs text-zinc-400 pt-0.5">${workout.exercises.length} calibrated exercises in this split</p>
               </div>
             </div>
           </div>
 
-          <div class="space-y-3">
-            <button data-a="go" class="w-full py-5 text-lg font-black tracking-widest text-white hover:brightness-110 active:scale-[0.98] accent-bg rounded-xl shadow-lg shadow-blue-950/40 transition">
+          <div class="space-y-2.5 pt-2">
+            <button data-a="go" class="w-full py-4 sm:py-5 text-base sm:text-lg font-black tracking-widest text-white hover:brightness-110 active:scale-[0.98] accent-bg rounded-xl shadow-lg shadow-blue-950/40 transition">
               START SESSION
             </button>
           </div>
