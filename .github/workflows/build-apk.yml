@@ -17,16 +17,26 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install Core Dependencies
-        run: npm install --legacy-peer-deps
+      - name: Install Dependencies
+        run: |
+          npm install --legacy-peer-deps
+          npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
 
-      - name: Build Web Dist
+      - name: Build Web App
         run: npm run build
 
-      - name: Install & Run Capacitor
+      - name: Create Capacitor Config
         run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android --legacy-peer-deps
-          npx cap init BURN com.burn.fitness --web-dir dist
+          cat <<EOF > capacitor.config.json
+          {
+            "appId": "com.burn.fitness",
+            "appName": "BURN",
+            "webDir": "dist"
+          }
+          EOF
+
+      - name: Add Android Platform
+        run: |
           npx cap add android
           npx cap sync android
 
@@ -42,7 +52,7 @@ jobs:
           chmod +x gradlew
           ./gradlew assembleDebug
 
-      - name: Upload APK
+      - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: BURN-debug-apk
