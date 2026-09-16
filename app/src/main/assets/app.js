@@ -1,5 +1,5 @@
 // =========================================================
-// BURN - Metabolic & Progressive Performance Engine v4.0
+// BURN - Progressive Performance & In-Gym Workout Engine
 // =========================================================
 
 (function() {
@@ -9,838 +9,162 @@
   if (!root) return;
 
   // -------------------------------------------------------
-  // MASTER EXERCISE DATABASE
+  // GLOBAL STATE
   // -------------------------------------------------------
-  const MASTER_EXERCISE_LIST = [
-    // Chest
-    "Barbell Bench Press",
-    "Dumbbell Bench Press",
-    "Incline Barbell Bench Press",
-    "Incline Dumbbell Bench Press",
-    "Decline Barbell Bench Press",
-    "Decline Dumbbell Bench Press",
-    "Flat Dumbbell Fly",
-    "Incline Dumbbell Fly",
-    "Cable Fly",
-    "Pec Deck Fly",
-    "Machine Chest Press",
-    "Smith Machine Bench Press",
-    "Push-Up",
-    "Wide Push-Up",
-    "Diamond Push-Up",
-    "Deficit Push-Up",
-
-    // Back & Lats
-    "Pull-Up",
-    "Chin-Up",
-    "Lat Pulldown",
-    "Wide-Grip Lat Pulldown",
-    "Close-Grip Lat Pulldown",
-    "Barbell Bent-Over Row",
-    "Pendlay Row",
-    "Seated Cable Row",
-    "Dumbbell Row",
-    "Deadlift",
-    "Romanian Deadlift",
-    "Stiff-Leg Deadlift",
-    "Back Extension",
-    "Hyperextension",
-    "Good Morning",
-    "Barbell Shrug",
-    "Dumbbell Shrug",
-
-    // Shoulders
-    "Overhead Barbell Press",
-    "Standing Military Press",
-    "Seated Barbell Press",
-    "Dumbbell Shoulder Press",
-    "Arnold Press",
-    "Machine Shoulder Press",
-    "Dumbbell Lateral Raise",
-    "Cable Lateral Raise",
-    "Front Raise",
-    "Face Pull",
-    "Rear Delt Fly",
-    "Reverse Fly",
-    "Incline Dumbbell Rear Delt Fly",
-    "Machine Reverse Fly",
-    "Cable Rear Delt Fly",
-
-    // Biceps & Forearms
-    "Barbell Curl",
-    "EZ Bar Curl",
-    "Dumbbell Curl",
-    "Alternating Dumbbell Curl",
-    "Hammer Curl",
-    "Incline Dumbbell Curl",
-    "Concentration Curl",
-    "Preacher Curl",
-    "Cable Curl",
-    "Wrist Curl",
-    "Reverse Wrist Curl",
-    "Farmer's Carry",
-    "Plate Pinch Hold",
-    "Dead Hang",
-
-    // Triceps
-    "Close-Grip Bench Press",
-    "Skull Crusher",
-    "Overhead Dumbbell Extension",
-    "Cable Pushdown",
-    "Rope Pushdown",
-    "Kickback",
-    "Bench Dip",
-    "Parallel Bar Dip",
-
-    // Core & Abs
-    "Crunch",
-    "Sit-Up",
-    "Decline Sit-Up",
-    "Reverse Crunch",
-    "Bicycle Crunch",
-    "V-Up",
-    "Plank",
-    "Hollow Body Hold",
-    "Dead Bug",
-    "Hanging Leg Raise",
-    "Hanging Knee Raise",
-    "Side Crunch",
-    "Cable Woodchopper",
-    "Russian Twist",
-    "Heel Tap",
-    "Toe Taps",
-    "Flutter Kicks",
-    "Half Crunches",
-    "Rope Crunch",
-    "Dragon Flags",
-    "Turkish Get-Up",
-    "Superman",
-    "Bird Dog",
-    "Copenhagen Plank",
-
-    // Legs & Glutes
-    "Back Squat",
-    "Front Squat",
-    "Goblet Squat",
-    "Leg Press",
-    "Leg Extension",
-    "Bulgarian Split Squat",
-    "Walking Lunge",
-    "Wall Sit",
-    "Lying Leg Curl",
-    "Seated Leg Curl",
-    "Glute Ham Raise",
-    "Standing Calf Raise",
-    "Seated Calf Raise",
-    "Single-Leg Calf Raise",
-    "Tibialis Raise",
-    "Wall Tibialis Raise",
-    "Barbell Hip Thrust",
-    "Dumbbell Hip Thrust",
-    "Glute Bridge",
-    "Clamshell",
-    "Fire Hydrant",
-    "Hip Abduction Machine",
-    "Banded Side Walk",
-    "Hip Adduction Machine",
-
-    // Neck
-    "Neck Flexion",
-    "Neck Extension",
-
-    // Conditioning & Calisthenics
-    "Burpees",
-    "Jump Squats",
-    "Butt Kicks",
-    "Murph",
-    "Double Under",
-    "10 m Sprint",
-    "Beep Test",
-    "Box Jump",
-    "Vertical Jump",
-    "High Knees",
-    "Handstands",
-    "One-Arm Balance",
-    "Crow Pose",
-
-    // Stretches & Recovery
-    "Hamstring Stretch",
-    "Cobra Stretch",
-    "Child's Pose",
-    "Mobility Protocol",
-    "Walking",
-
-    // Sports & Cardio
-    "Football (Soccer)",
-    "Basketball",
-    "Badminton",
-    "Volleyball",
-    "Cricket",
-    "Running",
-    "Cycling",
-    "Rowing Machine",
-    "Elliptical",
-    "Treadmill Walk",
-    "Swimming",
-    "Tennis",
-    "Table Tennis",
-    "Squash"
-  ];
-
-  const ALL_WORKOUTS = Array.from(new Set(MASTER_EXERCISE_LIST.map(e => e.trim().toUpperCase()))).sort((a,b) => a.localeCompare(b));
-
-  const ABS_EXERCISES = [
-    "LEG RAISE", "V-UP", "RUSSIAN TWIST", "HEEL TAP", "TOE TAP", "HOLLOW", "PLANK",
-    "FLUTTER KICK", "CRUNCH", "DRAGON FLAG", "DEAD BUG", "WOODCHOPPER", "COPENHAGEN"
-  ];
-
-  // -------------------------------------------------------
-  // 7-DAY WORKOUT SCHEDULE
-  // -------------------------------------------------------
-  const WEEKLY_SCHEDULE = [
-    {
-      dayNum: 1,
-      dayName: "MONDAY",
-      title: "DAY 1 - MONDAY",
-      muscleGroup: "PULL DAY",
-      exercises: [
-        "PULL-UP",
-        "BARBELL BENT-OVER ROW",
-        "LAT PULLDOWN",
-        "SEATED CABLE ROW",
-        "DUMBBELL ROW",
-        "DEADLIFT",
-        "BARBELL CURL",
-        "HAMMER CURL",
-        "FACE PULL",
-        "REAR DELT FLY",
-        "DEAD HANG"
-      ]
-    },
-    {
-      dayNum: 2,
-      dayName: "TUESDAY",
-      title: "DAY 2 - TUESDAY",
-      muscleGroup: "PUSH DAY",
-      exercises: [
-        "BARBELL BENCH PRESS",
-        "INCLINE DUMBBELL BENCH PRESS",
-        "OVERHEAD BARBELL PRESS",
-        "DUMBBELL LATERAL RAISE",
-        "PARALLEL BAR DIP",
-        "CABLE PUSHDOWN",
-        "ROPE PUSHDOWN",
-        "HANGING LEG RAISE"
-      ]
-    },
-    {
-      dayNum: 3,
-      dayName: "WEDNESDAY",
-      title: "DAY 3 - WEDNESDAY",
-      muscleGroup: "LEG DAY",
-      exercises: [
-        "BACK SQUAT",
-        "ROMANIAN DEADLIFT",
-        "LEG PRESS",
-        "BULGARIAN SPLIT SQUAT",
-        "WALKING LUNGE",
-        "LYING LEG CURL",
-        "STANDING CALF RAISE",
-        "PLANK"
-      ]
-    },
-    {
-      dayNum: 4,
-      dayName: "THURSDAY",
-      title: "DAY 4 - THURSDAY",
-      muscleGroup: "ARMS DAY",
-      exercises: [
-        "CLOSE-GRIP BENCH PRESS",
-        "SKULL CRUSHER",
-        "BARBELL CURL",
-        "EZ BAR CURL",
-        "INCLINE DUMBBELL CURL",
-        "OVERHEAD DUMBBELL EXTENSION",
-        "ROPE PUSHDOWN",
-        "WRIST CURL",
-        "REVERSE WRIST CURL"
-      ]
-    },
-    {
-      dayNum: 5,
-      dayName: "FRIDAY",
-      title: "DAY 5 - FRIDAY",
-      muscleGroup: "CHEST AND BACK SPLIT",
-      exercises: [
-        "INCLINE BARBELL BENCH PRESS",
-        "DUMBBELL BENCH PRESS",
-        "FLAT DUMBBELL FLY",
-        "PENDLAY ROW",
-        "WIDE-GRIP LAT PULLDOWN",
-        "PUSH-UP",
-        "DRAGON FLAGS",
-        "RUSSIAN TWIST"
-      ]
-    },
-    {
-      dayNum: 6,
-      dayName: "SATURDAY",
-      title: "DAY 6 - SATURDAY",
-      muscleGroup: "SPORTS",
-      exercises: [
-        "FOOTBALL (SOCCER)",
-        "BASKETBALL",
-        "BADMINTON",
-        "VOLLEYBALL",
-        "RUNNING",
-        "CYCLING",
-        "10 M SPRINT",
-        "BURPEES"
-      ]
-    },
-    {
-      dayNum: 7,
-      dayName: "SUNDAY",
-      title: "DAY 7 - SUNDAY",
-      muscleGroup: "SPORTS / REST",
-      exercises: [
-        "TREADMILL WALK",
-        "SWIMMING",
-        "HAMSTRING STRETCH",
-        "COBRA STRETCH",
-        "CHILD'S POSE",
-        "ROWING MACHINE",
-        "CYCLING"
-      ]
-    }
-  ];
-
-  // -------------------------------------------------------
-  // SPORT POSITIONS DEFINITIONS
-  // -------------------------------------------------------
-  const SPORT_CONFIGS = {
-    "FOOTBALL": {
-      name: "Football (Soccer)",
-      positions: ["Midfielder", "Striker / Forward", "Winger", "Fullback / Wingback", "Center Back", "Goalkeeper"]
-    },
-    "BASKETBALL": {
-      name: "Basketball",
-      positions: ["Point Guard", "Shooting Guard", "Small Forward", "Power Forward", "Center"]
-    },
-    "VOLLEYBALL": {
-      name: "Volleyball",
-      positions: ["Outside Hitter / Spiker", "Middle Blocker", "Setter", "Libero / Defensive Specialist", "Opposite Hitter"]
-    },
-    "CRICKET": {
-      name: "Cricket",
-      positions: ["Pace Bowler", "Spin Bowler", "Top-Order Batsman", "Middle-Order / Finisher", "Wicketkeeper", "All-Rounder"]
-    },
-    "BADMINTON": {
-      name: "Badminton",
-      positions: ["Singles (Attacking)", "Singles (Rally / Defensive)", "Doubles (Front Court)", "Doubles (Back Court Power)"]
-    },
-    "TENNIS": {
-      name: "Tennis / Squash",
-      positions: ["Singles Match", "Doubles Match", "Drills / Rally Practice"]
-    }
-  };
-
-  // -------------------------------------------------------
-  // LOCAL STORAGE & 30-DAY ROLLING HISTORY
-  // -------------------------------------------------------
-  function getStoredProfile() {
-    try {
-      const raw = localStorage.getItem("burn_user_profile");
-      if (raw) return JSON.parse(raw);
-    } catch(e) {}
-    return null;
-  }
-
-  function saveProfile(prof) {
-    try {
-      localStorage.setItem("burn_user_profile", JSON.stringify(prof));
-    } catch(e) {}
-  }
-
-  function getHistoryMap() {
-    try {
-      const raw = localStorage.getItem("burn_history_v2");
-      if (raw) return JSON.parse(raw);
-    } catch(e) {}
-    return {};
-  }
-
-  function saveHistoryMap(map) {
-    try {
-      localStorage.setItem("burn_history_v2", JSON.stringify(map));
-    } catch(e) {}
-  }
-
-  function prune30DayHistory() {
-    const map = getHistoryMap();
-    const now = new Date();
-    const cutoffTime = now.getTime() - (30 * 24 * 60 * 60 * 1000);
-    let modified = false;
-
-    for (const dateKey of Object.keys(map)) {
-      const [y, m, d] = dateKey.split("-").map(Number);
-      const entryDate = new Date(y, m - 1, d).getTime();
-      if (entryDate < cutoffTime) {
-        delete map[dateKey];
-        modified = true;
-      }
-    }
-
-    if (modified) {
-      saveHistoryMap(map);
-    }
-    return map;
-  }
-
-  function getPast30DaysList() {
-    const historyMap = prune30DayHistory();
-    const list = [];
-    const today = new Date();
-
-    for (let i = 0; i < 30; i++) {
-      const target = new Date();
-      target.setDate(today.getDate() - i);
-      const key = `${target.getFullYear()}-${String(target.getMonth()+1).padStart(2,"0")}-${String(target.getDate()).padStart(2,"0")}`;
-      const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-      const dayOfWeek = dayNames[target.getDay()];
-
-      const recorded = historyMap[key];
-      if (recorded) {
-        list.push({
-          dateKey: key,
-          dateFormatted: target.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-          dayName: dayOfWeek,
-          isRest: false,
-          ...recorded
-        });
-      } else {
-        list.push({
-          dateKey: key,
-          dateFormatted: target.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
-          dayName: dayOfWeek,
-          isRest: true,
-          splitName: "REST / RECOVERY DAY",
-          calories: 0,
-          duration: 0,
-          exercisesCount: 0
-        });
-      }
-    }
-    return list;
-  }
-
-  function logSessionToHistory(sessionData) {
-    const map = prune30DayHistory();
-    const key = sessionData.dateKey || todayKey();
-    map[key] = {
-      timestamp: Date.now(),
-      splitName: sessionData.splitName,
-      userWeight: sessionData.userWeight,
-      duration: sessionData.duration,
-      calories: sessionData.calories,
-      targetedMuscles: sessionData.targetedMuscles,
-      recoveryNext48Hours: sessionData.recoveryNext48Hours,
-      detailedSummary: sessionData.detailedSummary,
-      exercisesLogged: sessionData.exercisesLogged
-    };
-    saveHistoryMap(map);
-  }
-
-  // -------------------------------------------------------
-  // HELPERS
-  // -------------------------------------------------------
-  function getTodayDayNum() {
-    const day = new Date().getDay();
-    return day === 0 ? 7 : day;
-  }
-
-  function todayKey() {
-    const d = new Date();
-    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-  }
-
-  function calculateAge(dobString) {
-    if (!dobString) return 25;
-    try {
-      const dob = new Date(dobString);
-      const today = new Date();
-      let age = today.getFullYear() - dob.getFullYear();
-      const m = today.getMonth() - dob.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
-        age--;
-      }
-      return age > 0 ? age : 25;
-    } catch(e) {
-      return 25;
-    }
-  }
-
-  function isAbExercise(name) {
-    const upper = String(name).toUpperCase();
-    return ABS_EXERCISES.some(abs => upper.includes(abs));
-  }
-
-  function getExerciseCategory(name) {
-    const n = String(name).toUpperCase().trim();
-    if (n.includes("FOOTBALL") || n.includes("SOCCER")) return "SPORT_FOOTBALL";
-    if (n.includes("BASKETBALL")) return "SPORT_BASKETBALL";
-    if (n.includes("VOLLEYBALL")) return "SPORT_VOLLEYBALL";
-    if (n.includes("CRICKET")) return "SPORT_CRICKET";
-    if (n.includes("BADMINTON")) return "SPORT_BADMINTON";
-    if (n.includes("TENNIS") || n.includes("SQUASH") || n.includes("TABLE TENNIS")) return "SPORT_RACKET";
-    if (n.includes("RUNNING") || n.includes("SPRINT") || n.includes("BEEP TEST")) return "CARDIO_RUNNING";
-    if (n.includes("CYCLING")) return "CARDIO_CYCLING";
-    if (n.includes("WALK") || n.includes("TREADMILL")) return "CARDIO_WALKING";
-    if (n.includes("SWIMMING") || n.includes("ROWING") || n.includes("ELLIPTICAL")) return "CARDIO_MACHINE";
-    if (n.includes("STRETCH") || n.includes("POSE") || n.includes("MOBILITY")) return "MOBILITY";
-    if (n.includes("HANDSTAND") || n.includes("BALANCE") || n.includes("CROW") || n.includes("DEAD HANG") || n.includes("WALL SIT")) return "ISOMETRIC";
-    return "STRENGTH";
-  }
-
-  function createLogForExercise(name) {
-    const cat = getExerciseCategory(name);
-    if (cat === "SPORT_FOOTBALL") {
-      return { kind: "SPORT", name, sportType: "FOOTBALL", mins: 0, position: "Midfielder", difficulty: 7 };
-    }
-    if (cat === "SPORT_BASKETBALL") {
-      return { kind: "SPORT", name, sportType: "BASKETBALL", mins: 0, position: "Point Guard", difficulty: 7 };
-    }
-    if (cat === "SPORT_VOLLEYBALL") {
-      return { kind: "SPORT", name, sportType: "VOLLEYBALL", mins: 0, position: "Outside Hitter / Spiker", difficulty: 7 };
-    }
-    if (cat === "SPORT_CRICKET") {
-      return { kind: "SPORT", name, sportType: "CRICKET", mins: 0, position: "All-Rounder", difficulty: 7 };
-    }
-    if (cat === "SPORT_BADMINTON") {
-      return { kind: "SPORT", name, sportType: "BADMINTON", mins: 0, position: "Singles (Attacking)", difficulty: 7 };
-    }
-    if (cat === "SPORT_RACKET") {
-      return { kind: "SPORT", name, sportType: "TENNIS", mins: 0, position: "Singles Match", difficulty: 7 };
-    }
-    if (cat === "CARDIO_RUNNING") {
-      return { kind: "RUNNING", name, mins: 0, distanceKm: 0, difficulty: 7 };
-    }
-    if (cat === "CARDIO_CYCLING") {
-      return { kind: "CYCLING", name, mins: 0, difficulty: 6 };
-    }
-    if (cat === "CARDIO_WALKING" || cat === "CARDIO_MACHINE") {
-      return { kind: "CARDIO_GENERAL", name, mins: 0, difficulty: 5 };
-    }
-    if (cat === "MOBILITY") {
-      return { kind: "MOBILITY", name, mins: 0 };
-    }
-    if (cat === "ISOMETRIC") {
-      return { kind: "ISOMETRIC", name, secs: 0, difficulty: 6 };
-    }
-    return { kind: "STRENGTH", name, value: 0, weight: 0, mode: "REPS", isAbdominal: isAbExercise(name) };
-  }
-
-  // -------------------------------------------------------
-  // ANATOMY & METABOLIC ENGINE
-  // -------------------------------------------------------
-  function getMusclesForExercise(name) {
-    const n = String(name).toUpperCase();
-    const targeted = [];
-
-    if (n.includes("BENCH") || n.includes("CHEST") || n.includes("FLY") || n.includes("PUSH-UP") || n.includes("PEC DECK")) {
-      targeted.push("Pectoralis Major (Sternocostal Head)", "Anterior Deltoids", "Triceps Brachii");
-    }
-    if (n.includes("INCLINE")) {
-      targeted.push("Clavicular Head (Upper Chest)", "Anterior Deltoids");
-    }
-    if (n.includes("DIP")) {
-      targeted.push("Lower Pectoralis", "Triceps Brachii", "Anterior Deltoids");
-    }
-    if (n.includes("PULL-UP") || n.includes("CHIN-UP") || n.includes("LAT PULLDOWN")) {
-      targeted.push("Latissimus Dorsi", "Teres Major", "Biceps Brachii", "Rhomboids");
-    }
-    if (n.includes("ROW") || n.includes("DEADLIFT") || n.includes("PENDLAY")) {
-      targeted.push("Latissimus Dorsi", "Rhomboids", "Middle & Lower Trapezius", "Erector Spinae");
-    }
-    if (n.includes("SHOULDER") || n.includes("MILITARY") || n.includes("ARNOLD") || n.includes("OVERHEAD")) {
-      targeted.push("Anterior Deltoids", "Lateral Deltoids", "Triceps Brachii", "Upper Trapezius");
-    }
-    if (n.includes("REAR DELT") || n.includes("REVERSE FLY") || n.includes("FACE PULL")) {
-      targeted.push("Posterior Deltoids (Rear Delts)", "Rhomboids", "Infraspinatus", "Middle Trapezius");
-    }
-    if (n.includes("LATERAL RAISE")) {
-      targeted.push("Lateral Deltoids (Medial Head)", "Supraspinatus");
-    }
-    if (n.includes("CURL")) {
-      targeted.push("Biceps Brachii (Short & Long Heads)", "Brachialis", "Brachioradialis");
-    }
-    if (n.includes("TRICEPS") || n.includes("PUSHDOWN") || n.includes("SKULL CRUSHER") || n.includes("KICKBACK")) {
-      targeted.push("Triceps Brachii (Lateral, Long, and Medial Heads)");
-    }
-    if (n.includes("SQUAT") || n.includes("LEG PRESS") || n.includes("LUNGE") || n.includes("EXTENSION")) {
-      targeted.push("Quadriceps Femoris (Rectus Femoris, Vastus Lateralis/Medialis)", "Gluteus Maximus");
-    }
-    if (n.includes("RDL") || n.includes("ROMANIAN") || n.includes("LEG CURL") || n.includes("STIFF-LEG")) {
-      targeted.push("Hamstrings (Biceps Femoris, Semitendinosus)", "Gluteus Maximus", "Erector Spinae");
-    }
-    if (n.includes("CALF") || n.includes("TIBIALIS")) {
-      targeted.push("Gastrocnemius", "Soleus", "Tibialis Anterior");
-    }
-    if (n.includes("HIP THRUST") || n.includes("GLUTE BRIDGE") || n.includes("CLAMSHELL")) {
-      targeted.push("Gluteus Maximus", "Gluteus Medius", "Gluteus Minimus");
-    }
-    if (isAbExercise(n)) {
-      targeted.push("Rectus Abdominis", "Transverse Abdominis", "Internal & External Obliques");
-    }
-    if (n.includes("FOOTBALL") || n.includes("SOCCER")) {
-      targeted.push("Cardiorespiratory System", "Quadriceps", "Hamstrings", "Gastrocnemius", "Adductors", "Agility Core");
-    }
-    if (n.includes("BASKETBALL")) {
-      targeted.push("Cardiovascular System", "Calf Complex", "Quadriceps", "Deltoids", "Rotational Core");
-    }
-    if (n.includes("VOLLEYBALL")) {
-      targeted.push("Posterior Chain", "Quadriceps (Explosive Jump Mechanics)", "Shoulder Rotator Cuff", "Core Stabilizers");
-    }
-    if (n.includes("BADMINTON") || n.includes("TENNIS")) {
-      targeted.push("Shoulder Rotators", "Forearm Flexors", "Calves", "Lateral Hip Stabilizers");
-    }
-    if (n.includes("RUNNING") || n.includes("CYCLING") || n.includes("SPRINT")) {
-      targeted.push("Cardiorespiratory System", "Quadriceps", "Gastrocnemius/Soleus", "Gluteal Complex");
-    }
-
-    if (targeted.length === 0) {
-      targeted.push("Full Body Neuromuscular Engagement", "Core Trunk Stabilizers");
-    }
-    return Array.from(new Set(targeted));
-  }
-
-  function computeMetabolicReport(profile, userWeight, durationMins, logs, workoutTitle, workoutSplit) {
-    const weight = Number(userWeight) || 70;
-    const height = Number(profile?.height) || 175;
-    const age = profile?.dob ? calculateAge(profile.dob) : 25;
-    const mins = Number(durationMins) || 45;
-
-    // 1. Precise BMR Formula (Mifflin-St Jeor)
-    const bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-
-    // 2. Work Analysis
-    let totalSets = 0;
-    let totalVolumeKg = 0;
-    let sportsMinutes = 0;
-    let cardioMinutes = 0;
-    const loggedMuscles = new Set();
-    const activeExerciseList = [];
-
-    Object.entries(logs).forEach(([name, log]) => {
-      const muscles = getMusclesForExercise(name);
-      muscles.forEach(m => loggedMuscles.add(m));
-
-      if (log.kind === "STRENGTH") {
-        const val = Number(log.value) || 0;
-        const wt = Number(log.weight) || 0;
-        if (val > 0) {
-          totalSets++;
-          totalVolumeKg += (val * (wt || (weight * 0.6)));
-          activeExerciseList.push(`${name} (${val} ${log.mode}, ${wt}kg)`);
-        }
-      } else if (log.kind === "SPORT") {
-        const sm = Number(log.mins) || 0;
-        if (sm > 0) {
-          sportsMinutes += sm;
-          activeExerciseList.push(`${name} [${log.position}, ${sm} mins, diff ${log.difficulty}/10]`);
-        }
-      } else if (log.kind === "RUNNING") {
-        const rm = Number(log.mins) || 0;
-        if (rm > 0) {
-          cardioMinutes += rm;
-          activeExerciseList.push(`${name} (${rm} mins, ${log.distanceKm || 0} km)`);
-        }
-      } else if (log.mins > 0 || log.secs > 0) {
-        cardioMinutes += Number(log.mins || (log.secs / 60));
-        activeExerciseList.push(`${name}`);
-      }
-    });
-
-    // 3. Dynamic MET Multiplier
-    let baseMET = 6.2;
-    if (sportsMinutes > 0) baseMET += 2.2;
-    if (cardioMinutes > 20) baseMET += 1.8;
-    if (totalVolumeKg > 4000) baseMET += 1.2;
-
-    const netCalories = (baseMET * 3.5 * weight / 200) * mins;
-    const epoc = netCalories * 0.14; // EPOC factor
-    const totalCalories = Math.max(80, Math.round(netCalories + epoc));
-
-    const targetedMusclesList = Array.from(loggedMuscles);
-    if (targetedMusclesList.length === 0) {
-      targetedMusclesList.push("Latissimus Dorsi", "Pectoralis Major", "Quadriceps Femoris", "Core Stabilizers");
-    }
-
-    const recoveryNext48Hours = [
-      "0 to 12 Hours: Acute glycogen depletion and neuromuscular fatigue. Myofibrillar micro-tears begin signaling localized inflammatory recovery cascades. Rehydrate with 600-800ml electrolyte fluids and consume 30-40g fast-digesting protein within 90 minutes.",
-      "12 to 24 Hours: Onset of Delayed Onset Muscle Soreness (DOMS). Muscle protein synthesis reaches peak velocity. Expect mild localized stiffness and connective tissue tightness across the primary prime movers.",
-      "24 to 48 Hours: Peak structural remodeling and nervous system stabilization. Prioritize 8+ hours of continuous restorative sleep, light active-recovery mobility walking, and 1.8-2.2g protein per kilogram of bodyweight to maximize athletic supercompensation."
-    ];
-
-    const detailedSummary = `Today's performance session delivered an intense athletic stimulus calibrated specifically to your biometric profile of ${weight} kg body mass, ${height} cm stature, and age ${age}. Over the course of ${mins} continuous minutes, you achieved an estimated energy expenditure of ${totalCalories} total calories, incorporating standard metabolic equivalency, work density, and excess post-exercise oxygen consumption (EPOC).
-
-Focusing on the ${workoutSplit || "Scheduled Program"}, your session placed concentrated mechanical tension and metabolic stress across the ${targetedMusclesList.slice(0, 4).join(", ")}, with synergistic neuromuscular stability provided by the trunk and core stabilizers. The volume accumulation reflects a high-intensity resistance density pattern, stimulating mammalian target of rapamycin (mTOR) signaling pathways essential for muscular hypertrophy, athletic power output, and cardiovascular conditioning.
-
-Over the upcoming 48-hour recovery cycle, your body will transition through muscular supercompensation. Ensure consistent nutrient timing with adequate protein ingestion, sustained sodium-potassium electrolyte balance, and active myofascial mobility work. Maintain optimal sleep hygiene tonight to facilitate human growth hormone (HGH) release and maximize physical adaptation before your next scheduled training split.`;
-
-    return {
-      calories: totalCalories,
-      targetedMuscles: targetedMusclesList,
-      recoveryNext48Hours: recoveryNext48Hours,
-      detailedSummary: detailedSummary,
-      activeExercisesCount: activeExerciseList.length,
-      exercisesLogged: activeExerciseList
-    };
-  }
-
-  // -------------------------------------------------------
-  // APP STATE
-  // -------------------------------------------------------
-  const storedProfile = getStoredProfile();
   const state = {
-    profile: storedProfile || { name: "ATHLETE", height: 175, dob: "2000-01-01" },
-    step: "WELCOME", // Direct to Welcome/Home dashboard
-    selectedDayNum: getTodayDayNum(),
-    userWeight: 0,
-    duration: 0,
-    logs: {},
-    addedExtras: [],
-    result: null,
-    isCalculating: false,
-    modalOpen: false,
-    search: "",
-    historyModalOpen: false,
-    profileModalOpen: false,
-    viewingHistoryDetail: null
+    currentTab: "WORKOUT", // "WORKOUT" | "ROUTINES" | "EXERCISES" | "MEASURE" | "HISTORY"
+    profile: window.BURN_STORAGE.getProfile(),
+    settings: window.BURN_STORAGE.getSettings(),
+
+    // Active live workout session
+    activeWorkout: null,
+
+    // Modals
+    plateModal: { open: false, targetWeight: 100, barWeight: 20 },
+    exerciseDetailModal: { open: false, exerciseName: null, activeMetric: "MAX_WEIGHT" },
+    routineEditorModal: { open: false, routine: null, isNew: false },
+    customExerciseModal: { open: false, form: { name: "", category: "CHEST", trackingType: "WEIGHT_REPS", instructions: "" } },
+    addExerciseModal: { open: false, search: "", selectedCategory: "ALL", targetType: "WORKOUT" },
+    measurementModal: { open: false, form: { weightKg: "", bodyFat: "", chestCm: "", waistCm: "", armsCm: "", thighsCm: "" } },
+    settingsModal: { open: false },
+    viewingHistoryDetail: null,
+    summaryModal: { open: false, session: null }
   };
 
-  function getCurrentWorkout() {
-    return WEEKLY_SCHEDULE.find(w => w.dayNum === state.selectedDayNum) || WEEKLY_SCHEDULE[0];
-  }
+  // -------------------------------------------------------
+  // WORKOUT LIFECYCLE MANAGEMENT
+  // -------------------------------------------------------
+  function startWorkoutFromRoutine(routine) {
+    const exercises = (routine.exercises || []).map(exName => {
+      const dbEx = window.BURN_STORAGE.getAllExercises().find(e => e.name.toUpperCase() === exName.toUpperCase());
+      const previousData = window.BURN_STORAGE.getPreviousSetsForExercise(exName, routine.id);
 
-  function initCurrentLogs() {
-    const w = getCurrentWorkout();
-    const all = w.exercises.concat(state.addedExtras);
-    const newLogs = {};
-    all.forEach(ex => {
-      newLogs[ex] = state.logs[ex] || createLogForExercise(ex);
+      // Pre-fill default 3 sets or based on previous session length
+      const initialSetCount = previousData && previousData.sets.length > 0 ? previousData.sets.length : 3;
+      const sets = [];
+      for (let i = 1; i <= initialSetCount; i++) {
+        sets.push({
+          id: `s_${Date.now()}_${i}_${Math.random().toString(36).substr(2, 4)}`,
+          setNum: i,
+          type: "NORMAL", // NORMAL, WARMUP, DROP, FAILURE
+          weight: "",
+          reps: "",
+          completed: false,
+          isPR: false
+        });
+      }
+
+      return {
+        name: exName,
+        category: dbEx?.category || "STRENGTH",
+        trackingType: dbEx?.trackingType || "WEIGHT_REPS",
+        note: "",
+        restTimerSeconds: state.settings.defaultRestSeconds || 90,
+        sets: sets,
+        previous: previousData
+      };
     });
-    state.logs = newLogs;
+
+    state.activeWorkout = {
+      id: `session_${Date.now()}`,
+      routineId: routine.id || "quick",
+      routineName: routine.name || "Custom Workout",
+      startTime: Date.now(),
+      userWeight: state.profile.currentWeightKg || 75,
+      exercises: exercises
+    };
+
+    state.currentTab = "WORKOUT";
+    render();
   }
 
-  // -------------------------------------------------------
-  // GEMINI AI INTEGRATION
-  // -------------------------------------------------------
-  async function calculateWithGemini() {
-    state.isCalculating = true;
-    render();
+  function finishActiveWorkout() {
+    if (!state.activeWorkout) return;
+    const session = state.activeWorkout;
+    const durationMins = Math.max(1, Math.round((Date.now() - session.startTime) / 60000));
 
-    const currentW = getCurrentWorkout();
-    const offlineFallback = computeMetabolicReport(
-      state.profile,
-      state.userWeight,
-      state.duration,
-      state.logs,
-      currentW.title,
-      currentW.muscleGroup
-    );
+    // Filter to exercises that have at least one completed or logged set
+    const completedExercises = session.exercises.filter(ex => {
+      return ex.sets.some(s => s.completed || (Number(s.reps) > 0 && Number(s.weight) >= 0));
+    });
 
-    const apiKey = window.GEMINI_KEY;
-    if (!apiKey) {
-      finalizeSession(offlineFallback);
+    if (completedExercises.length === 0) {
+      if (confirm("No completed sets logged yet. Discard this session?")) {
+        state.activeWorkout = null;
+        window.BURN_TIMER.stop();
+        render();
+      }
       return;
     }
 
-    try {
-      const payload = {
-        athlete: {
-          name: state.profile?.name || "Guest",
-          heightCm: state.profile?.height || 175,
-          dob: state.profile?.dob || "1999-01-01",
-          age: state.profile?.dob ? calculateAge(state.profile.dob) : 25,
-          currentWeightKg: state.userWeight || 70
-        },
-        session: {
-          workoutTitle: currentW.title,
-          split: currentW.muscleGroup,
-          durationMinutes: state.duration,
-          logs: state.logs
-        }
-      };
+    let totalVolume = 0;
+    let totalSets = 0;
+    let totalReps = 0;
+    let totalPRs = 0;
+    const musclesSet = new Set();
 
-      const prompt = `You are the BURN elite sports science AI engine. Analyze this complete workout session and athlete biometrics:
-${JSON.stringify(payload)}
+    completedExercises.forEach(ex => {
+      const dbEx = window.BURN_STORAGE.getAllExercises().find(e => e.name.toUpperCase() === ex.name.toUpperCase());
+      if (dbEx?.primary) musclesSet.add(dbEx.primary);
+      (dbEx?.secondary || []).forEach(m => musclesSet.add(m));
 
-Calculate the precise calories burned using metabolic equivalency, biometric parameters (height, weight, age, BMR), and total volume load.
-Provide:
-1. "calories": Total estimated calories burned (integer number).
-2. "targetedMuscles": Array of strings naming specific anatomical muscle groups targeted in this session.
-3. "recoveryNext48Hours": Array of 3 comprehensive strings detailing what the athlete should expect in the next 12h, 24h, and 48h (DOMS, neuromuscular recovery, protein targets, hydration).
-4. "detailedSummary": A comprehensive, analytical, highly thorough breakdown of AT LEAST 160 WORDS explaining the mechanical tension, metabolic stress, energy pathway contributions, nervous system fatigue, and recovery supercompensation protocol for this session.
-
-Return ONLY raw JSON with keys "calories" (number), "targetedMuscles" (array of strings), "recoveryNext48Hours" (array of strings), and "detailedSummary" (string of >= 160 words). Do NOT wrap in markdown block quotes.`;
-
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }]
-        })
+      ex.sets.forEach(set => {
+        if (!set.completed) return;
+        totalSets++;
+        const wt = Number(set.weight) || 0;
+        const rp = Number(set.reps) || 0;
+        totalReps += rp;
+        totalVolume += (wt * rp);
+        if (set.isPR) totalPRs++;
       });
-
-      const data = await response.json();
-      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
-      const cleanJson = rawText.replace(/```json|```/g, "").trim();
-      
-      if (cleanJson) {
-        const parsed = JSON.parse(cleanJson);
-        if (parsed.calories && parsed.detailedSummary) {
-          finalizeSession({
-            calories: Number(parsed.calories) || offlineFallback.calories,
-            targetedMuscles: Array.isArray(parsed.targetedMuscles) ? parsed.targetedMuscles : offlineFallback.targetedMuscles,
-            recoveryNext48Hours: Array.isArray(parsed.recoveryNext48Hours) ? parsed.recoveryNext48Hours : offlineFallback.recoveryNext48Hours,
-            detailedSummary: parsed.detailedSummary.length >= 100 ? parsed.detailedSummary : offlineFallback.detailedSummary,
-            exercisesLogged: offlineFallback.exercisesLogged
-          });
-          return;
-        }
-      }
-      finalizeSession(offlineFallback);
-    } catch(e) {
-      console.warn("AI network calculation fallback:", e);
-      finalizeSession(offlineFallback);
-    }
-  }
-
-  function finalizeSession(reportResult) {
-    const currentW = getCurrentWorkout();
-    state.result = reportResult;
-    state.isCalculating = false;
-    state.step = "RESULT";
-
-    // Auto-save to 30-day history
-    logSessionToHistory({
-      dateKey: todayKey(),
-      splitName: currentW.muscleGroup,
-      userWeight: state.userWeight,
-      duration: state.duration,
-      calories: reportResult.calories,
-      targetedMuscles: reportResult.targetedMuscles,
-      recoveryNext48Hours: reportResult.recoveryNext48Hours,
-      detailedSummary: reportResult.detailedSummary,
-      exercisesLogged: reportResult.exercisesLogged
     });
 
+    const targetedMuscles = Array.from(musclesSet);
+    if (targetedMuscles.length === 0) targetedMuscles.push("Full Body Prime Movers", "Core Stabilizers");
+
+    const recoveryPlan = [
+      "0-12 Hours: Glycogen repletion & acute neuromuscular recovery. Hydrate with 500-750ml electrolyte water and ingest 30-40g high-bioavailability protein within 2 hours.",
+      "12-24 Hours: Peak muscle protein synthesis (MPS). Mild Delayed Onset Muscle Soreness (DOMS) may manifest across primary agonists.",
+      "24-48 Hours: Full structural myofibrillar supercompensation. Prioritize 8+ hours restorative sleep and light active recovery."
+    ];
+
+    const detailedSummary = generateBiomechanicalSummary(session.routineName, completedExercises, totalVolume, totalSets, totalReps, durationMins, targetedMuscles);
+
+    const todayDate = new Date().toISOString().split("T")[0];
+    const savedRecord = window.BURN_STORAGE.saveWorkoutSession({
+      id: session.id,
+      dateKey: todayDate,
+      routineId: session.routineId,
+      routineName: session.routineName,
+      userWeight: session.userWeight,
+      duration: durationMins,
+      totalVolumeKg: Math.round(totalVolume),
+      totalSets: totalSets,
+      totalReps: totalReps,
+      prsCount: totalPRs,
+      targetedMuscles: targetedMuscles,
+      exercises: completedExercises,
+      recoveryNext48Hours: recoveryPlan,
+      detailedSummary: detailedSummary
+    });
+
+    window.BURN_TIMER.stop();
+    state.activeWorkout = null;
+    state.summaryModal = { open: true, session: savedRecord };
     render();
   }
 
+  function generateBiomechanicalSummary(routineName, exercises, volume, sets, reps, duration, muscles) {
+    const exerciseNames = exercises.map(e => e.name).join(", ");
+    const primaryMuscleList = muscles.slice(0, 4).join(", ");
+
+    return `Today's ${routineName} session was executed with high mechanical tension and progressive overload density. Over the course of ${duration} minutes, you completed ${sets} sets and accumulated ${reps} total repetitions, driving ${volume.toLocaleString()} kg of gross mechanical workload across the ${primaryMuscleList}.
+Exercises performed included: ${exerciseNames}.
+The resistance density sustained provides strong hypertrophic signaling through high motor-unit recruitment and localized cellular swelling. Follow the recovery guidelines over the next 48 hours to maximize strength adaptation and connective tissue repair.`;
+  }
+
   // -------------------------------------------------------
-  // RENDERING & HTML ESCAPING
+  // HTML ESCAPING UTILS
   // -------------------------------------------------------
   function escapeHtml(str) {
     return String(str || "")
@@ -856,610 +180,137 @@ Return ONLY raw JSON with keys "calories" (number), "targetedMuscles" (array of 
     return String(str || "").replaceAll('"', "&quot;");
   }
 
+  // -------------------------------------------------------
+  // MAIN RENDER ENGINE
+  // -------------------------------------------------------
   function render() {
-    const currentW = getCurrentWorkout();
-    const userName = (state.profile?.name || "GUEST").toUpperCase();
-
     root.innerHTML = `
-      <div class="min-h-screen max-w-lg mx-auto px-3.5 sm:px-4 bg-black text-white flex flex-col justify-between selection:bg-[#042854]">
+      <div class="min-h-screen max-w-lg mx-auto bg-black text-white flex flex-col justify-between selection:bg-[#042854] pb-16">
         
-        <!-- Header -->
-        <header class="py-2.5 shrink-0 flex items-center justify-between gap-2 border-b border-zinc-900">
-          <div class="flex items-center gap-2.5 shrink-0">
-            <img src="./app_logo.jpg" alt="BURN Logo" class="w-8 h-8 sm:w-9 sm:h-9 rounded-lg border border-zinc-800 object-cover shadow-sm" />
-            <div>
-              <h1 class="text-xl sm:text-2xl font-black tracking-tighter text-white leading-none">BURN</h1>
-              <p class="text-[8px] sm:text-[9px] font-bold text-zinc-500 uppercase tracking-wider mt-0.5">METABOLIC ENGINE</p>
-            </div>
-          </div>
+        <!-- Top App Bar -->
+        ${renderTopAppBar()}
 
-          <div class="flex items-center gap-1.5 shrink-0">
-            <!-- 30-Day History Button -->
-            <button data-a="open-history" class="flex items-center gap-1 bg-zinc-900 border border-zinc-800 px-2.5 py-1.5 rounded-full hover:border-zinc-700 transition" title="View 30-Day Activity History">
-              <svg class="w-3 h-3 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-              </svg>
-              <span class="text-[10px] font-bold text-zinc-300 uppercase tracking-wider">30D LOGS</span>
-            </button>
-
-            <!-- Profile Badge -->
-            ${state.profile ? `
-              <button data-a="open-profile" class="flex items-center gap-1 bg-zinc-900 border border-zinc-800 px-2.5 py-1.5 rounded-full hover:border-zinc-700 transition max-w-[100px]">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shrink-0"></span>
-                <span class="text-[10px] font-bold text-zinc-300 tracking-wider truncate">${escapeHtml(userName)}</span>
-              </button>
-            ` : ""}
-          </div>
-        </header>
-
-        <!-- Main Step View -->
-        <main class="flex-1 flex flex-col py-3 overflow-y-auto">
-          ${renderStep(currentW)}
+        <!-- Main Tab Content -->
+        <main class="flex-1 px-3 sm:px-4 py-2 overflow-y-auto">
+          ${renderTabContent()}
         </main>
 
-        <!-- Add Workout Modal -->
-        ${state.modalOpen ? renderAddWorkoutModal() : ""}
+        <!-- Persistent Rest Timer Banner (Floating) -->
+        ${renderRestTimerBanner()}
 
-        <!-- 30-Day History Modal -->
-        ${state.historyModalOpen ? renderHistoryModal() : ""}
+        <!-- Bottom Navigation Bar -->
+        ${renderBottomNavBar()}
 
-        <!-- History Detail Modal -->
+        <!-- Modals -->
+        ${state.plateModal.open ? renderPlateCalculatorModal() : ""}
+        ${state.exerciseDetailModal.open ? renderExerciseDetailModal() : ""}
+        ${state.routineEditorModal.open ? renderRoutineEditorModal() : ""}
+        ${state.customExerciseModal.open ? renderCustomExerciseModal() : ""}
+        ${state.addExerciseModal.open ? renderAddExerciseModal() : ""}
+        ${state.measurementModal.open ? renderMeasurementModal() : ""}
+        ${state.settingsModal.open ? renderSettingsModal() : ""}
         ${state.viewingHistoryDetail ? renderHistoryDetailModal(state.viewingHistoryDetail) : ""}
-
-        <!-- User Profile Settings Modal -->
-        ${state.profileModalOpen ? renderProfileModal() : ""}
+        ${state.summaryModal.open ? renderSummaryModal() : ""}
       </div>
     `;
 
     bindEvents();
   }
 
-  function renderStep(workout) {
-    // 1. ONBOARDING
-    if (state.step === "ONBOARDING") {
-      return `
-        <div class="fade-step flex flex-col justify-center flex-1 space-y-6 py-2">
-          <div class="space-y-2">
-            <span class="text-blue-400 text-xs font-black uppercase tracking-widest px-2.5 py-1 bg-blue-950/40 border border-blue-900/40 rounded-full inline-block">ATHLETE CALIBRATION</span>
-            <h2 class="text-3xl font-black tracking-tighter uppercase leading-tight">
-              SETUP YOUR<br/>METABOLIC PROFILE
-            </h2>
-            <p class="text-xs text-zinc-400 leading-relaxed">
-              Enter your biometrics once. BURN combines your height, age, and real-time body mass to compute precise metabolic energy expenditure.
-            </p>
-          </div>
-
-          <div class="space-y-4 pt-1">
-            <div>
-              <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">Athlete Name</label>
-              <input id="prof-name" type="text" placeholder="Guest" value="${escapeAttr(state.profile?.name || "Guest")}"
-                class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3.5 text-white font-bold text-sm outline-none focus:border-blue-500 transition" />
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">Height (CM)</label>
-                <input id="prof-height" type="number" placeholder="175" value="${state.profile?.height || "175"}"
-                  class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3.5 text-white font-mono font-bold text-sm outline-none focus:border-blue-500 transition" />
-              </div>
-              <div>
-                <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">Date of Birth</label>
-                <input id="prof-dob" type="date" value="${state.profile?.dob || "1999-06-15"}"
-                  class="w-full bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-white font-mono font-bold text-sm outline-none focus:border-blue-500 transition" />
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-4 space-y-3">
-            <button data-a="save-profile" class="w-full py-5 text-base font-black tracking-widest text-white hover:brightness-110 active:scale-[0.98] accent-bg rounded-xl transition shadow-lg shadow-blue-950/50">
-              CONTINUE TO WORKOUT
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    // 2. WELCOME / DASHBOARD
-    if (state.step === "WELCOME") {
-      const userName = (state.profile?.name || "GUEST").toUpperCase();
-      const dayButtons = WEEKLY_SCHEDULE.map(d => {
-        const isSelected = d.dayNum === state.selectedDayNum;
-        return `
-          <button data-a="select-day" data-day="${d.dayNum}"
-            class="py-2 px-0 text-center rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider transition w-full ${
-              isSelected
-                ? "bg-blue-900/70 text-blue-200 border border-blue-500 shadow-sm"
-                : "bg-zinc-900/80 text-zinc-400 border border-zinc-800 hover:border-zinc-700"
-            }">
-            ${d.dayName.slice(0, 3)}
-          </button>
-        `;
-      }).join("");
-
-      return `
-        <div class="fade-step flex flex-col justify-between flex-1 space-y-4 py-1">
-          <div class="space-y-4">
-            <!-- Day Selector 7-Grid -->
-            <div>
-              <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-1.5">7-DAY WORKOUT SPLIT</p>
-              <div class="grid grid-cols-7 gap-1 sm:gap-1.5 w-full">
-                ${dayButtons}
-              </div>
-            </div>
-
-            <!-- Greeting Header -->
-            <div class="space-y-3 pt-1">
-              <div class="flex items-center gap-3">
-                <img src="./app_logo.jpg" alt="Physique Emblem" class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl border border-zinc-800 object-cover shadow-md shrink-0" style="width: 52px; height: 52px;" />
-                <div class="min-w-0 flex-1">
-                  <p class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">PERFORMANCE ENGINE</p>
-                  <h2 class="text-xl sm:text-2xl font-black tracking-tight leading-tight uppercase text-white break-words">
-                    HELLO ${escapeHtml(userName)},<br/>
-                    IT'S <span class="text-blue-400">${escapeHtml(workout.title)}</span>
-                  </h2>
-                </div>
-              </div>
-              
-              <div class="p-3.5 bg-zinc-900/70 border border-zinc-800/80 rounded-2xl space-y-1">
-                <p class="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">SCHEDULED FOCUS</p>
-                <p class="text-xl font-black text-white uppercase tracking-tight">${escapeHtml(workout.muscleGroup)}</p>
-                <p class="text-xs text-zinc-400 pt-0.5">${workout.exercises.length} calibrated exercises in this split</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-2.5 pt-2">
-            <button data-a="go" class="w-full py-4 sm:py-5 text-base sm:text-lg font-black tracking-widest text-white hover:brightness-110 active:scale-[0.98] accent-bg rounded-xl shadow-lg shadow-blue-950/40 transition">
-              START SESSION
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    // 3. WEIGHT CHECK (Asked Every Time)
-    if (state.step === "WEIGHT") {
-      const enabled = Number(state.userWeight) > 0;
-      return `
-        <div class="fade-step flex flex-col justify-between flex-1 space-y-8 py-2">
-          <div class="space-y-2">
-            <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Daily Weight Check</p>
-            <h2 class="text-3xl sm:text-4xl font-black tracking-tighter uppercase leading-none">
-              HOW MUCH DO YOU<br/>WEIGH TODAY?
-            </h2>
-            <p class="text-xs text-zinc-400">
-              Accurate mass calibration ensures metabolic calculation precision for today's volume load.
-            </p>
-          </div>
-
-          <div class="w-full space-y-4 my-auto">
-            <div class="border-b-2 border-zinc-800 pb-2 focus-within:border-blue-500 transition">
-              <div class="flex items-baseline gap-2">
-                <input id="w" type="number" step="0.1" value="${state.userWeight ? String(state.userWeight) : ""}"
-                  class="w-full text-7xl font-black bg-transparent focus:outline-none text-white placeholder-zinc-800"
-                  placeholder="00.0" inputmode="decimal" autofocus />
-                <span class="text-3xl font-black text-zinc-500">KG</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-2.5">
-            <button id="startBtn" data-a="start"
-              class="w-full py-5 text-lg font-black tracking-widest transition-all rounded-xl ${
-                enabled ? "text-white hover:brightness-110 accent-bg shadow-lg shadow-blue-950/40" : "text-zinc-700 bg-zinc-900 cursor-not-allowed"
-              }">
-              LOG EXERCISES
-            </button>
-            <button data-a="back-to-welcome" class="w-full py-2.5 text-xs font-bold text-zinc-500 uppercase tracking-widest hover:text-white transition">
-              Back to Split Selection
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    // 4. EXERCISE LIST
-    if (state.step === "LIST") {
-      initCurrentLogs();
-      const exercises = workout.exercises.concat(state.addedExtras);
-      const list = exercises.map(ex => renderRow(ex, state.logs[ex])).join("");
-
-      return `
-        <div class="fade-step space-y-5 pb-10">
-          <div class="flex items-center justify-between pb-2 border-b border-zinc-900">
-            <div>
-              <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest">ACTIVE SESSION</p>
-              <h2 class="text-2xl font-black uppercase tracking-tight text-white">${escapeHtml(workout.muscleGroup)}</h2>
-            </div>
-            <div class="text-right">
-              <span class="text-xs font-mono font-bold text-blue-400 bg-blue-950/40 px-3 py-1 rounded-full border border-blue-900/40">${state.userWeight} KG</span>
-            </div>
-          </div>
-
-          <div class="space-y-3.5">${list}</div>
-
-          <div class="pt-3 space-y-2.5">
-            <button data-a="open-add-modal" class="w-full py-4 text-xs font-black tracking-[0.2em] uppercase border border-zinc-800 bg-zinc-950 hover:bg-zinc-900 transition rounded-xl flex items-center justify-center gap-2">
-              <span class="text-blue-400 text-base font-bold">+</span> ADD OTHER WORKOUT (${ALL_WORKOUTS.length} EXERCISES)
-            </button>
-
-            <button data-a="proceed" class="w-full text-white font-black py-5 tracking-widest hover:brightness-110 active:scale-[0.98] accent-bg rounded-xl shadow-lg shadow-blue-950/40 transition">
-              PROCEED TO DURATION
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    // 5. DURATION
-    if (state.step === "DURATION") {
-      const enabled = !state.isCalculating && Number(state.duration) > 0;
-      return `
-        <div class="fade-step flex flex-col justify-between flex-1 space-y-8 py-2">
-          <div class="space-y-2">
-            <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest">Session Summary</p>
-            <h2 class="text-3xl sm:text-4xl font-black tracking-tighter uppercase leading-none">TOTAL DURATION</h2>
-            <p class="text-xs text-zinc-400">Total time spent working, resting, and completing all sets.</p>
-          </div>
-
-          <div class="w-full space-y-4 my-auto">
-            <div class="border-b-2 border-zinc-800 pb-2 focus-within:border-blue-500 transition">
-              <div class="flex items-baseline gap-2">
-                <input id="d" type="number" value="${state.duration || ""}"
-                  class="w-full text-7xl font-black bg-transparent focus:outline-none text-white placeholder-zinc-800"
-                  placeholder="00" inputmode="numeric" autofocus />
-                <span class="text-3xl font-black text-zinc-500">MINS</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="space-y-2.5">
-            <button id="calcBtn" data-a="calc"
-              class="w-full py-5 font-black tracking-widest transition-all rounded-xl flex items-center justify-center gap-3 ${
-                enabled ? "text-white hover:brightness-110 accent-bg shadow-lg shadow-blue-950/40" : "text-zinc-700 bg-zinc-900 cursor-not-allowed"
-              }">
-              ${state.isCalculating ? `
-                <span class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                COMPUTING METABOLICS...
-              ` : "CALCULATE DETAILED REPORT"}
-            </button>
-
-            <button data-a="back-to-list" class="w-full text-zinc-500 text-xs font-black uppercase tracking-[0.2em] py-2 hover:text-white transition-colors">
-              Back to exercises
-            </button>
-          </div>
-        </div>
-      `;
-    }
-
-    // 6. RESULT
-    if (state.step === "RESULT" && state.result) {
-      const res = state.result;
-      const musclesTags = (res.targetedMuscles || []).map(m => `
-        <span class="text-[11px] font-bold bg-zinc-800 border border-zinc-700/60 text-zinc-200 px-3 py-1.5 rounded-lg">
-          ${escapeHtml(m)}
-        </span>
-      `).join("");
-
-      const recoveryItems = (res.recoveryNext48Hours || []).map(r => `
-        <li class="flex items-start gap-2 text-xs text-zinc-300 leading-relaxed">
-          <span class="text-blue-400 font-black mt-0.5">•</span>
-          <span>${escapeHtml(r)}</span>
-        </li>
-      `).join("");
-
-      return `
-        <div class="fade-step flex-1 pb-10 space-y-5">
-          <div class="bg-zinc-900/80 border border-zinc-800 p-5 sm:p-6 rounded-2xl space-y-5">
-            <div class="flex items-center justify-between border-b border-zinc-800 pb-3">
-              <span class="text-zinc-400 text-[10px] font-black uppercase tracking-[0.25em]">METABOLIC EXPENDITURE</span>
-              <span class="text-[10px] font-bold text-blue-400 bg-blue-950/40 border border-blue-900/50 px-2.5 py-0.5 rounded-full">LOGGED TO 30D HISTORY</span>
-            </div>
-
-            <div>
-              <span class="text-7xl font-black tracking-tighter block leading-none text-white">
-                ${Math.round(res.calories || 0)}
-              </span>
-              <span class="text-xs font-bold uppercase tracking-widest text-blue-400 mt-1 block">
-                ESTIMATED CALORIES BURNT
-              </span>
-            </div>
-
-            <!-- Targeted Muscles -->
-            <div class="border-t border-zinc-800 pt-4 space-y-2">
-              <h3 class="text-xs font-black uppercase tracking-wider text-zinc-300">Specific Muscles Targeted</h3>
-              <div class="flex flex-wrap gap-1.5">
-                ${musclesTags}
-              </div>
-            </div>
-
-            <!-- Next 2 Days Expectations -->
-            <div class="border-t border-zinc-800 pt-4 space-y-2">
-              <h3 class="text-xs font-black uppercase tracking-wider text-zinc-300">What To Expect (Next 48 Hours)</h3>
-              <ul class="space-y-2 bg-black/50 p-3.5 rounded-xl border border-zinc-800/80">
-                ${recoveryItems}
-              </ul>
-            </div>
-
-            <!-- Detailed Summary (150+ words) -->
-            <div class="border-t border-zinc-800 pt-4 space-y-2">
-              <h3 class="text-xs font-black uppercase tracking-wider text-zinc-300">Comprehensive Performance Breakdown</h3>
-              <div class="text-zinc-300 text-xs leading-relaxed font-normal bg-black/50 p-4 rounded-xl border border-zinc-800/80">
-                ${escapeHtml(res.detailedSummary || "")}
-              </div>
-            </div>
-
-            <!-- Finish Button -->
-            <div class="pt-2">
-              <button data-a="close-session" class="w-full bg-white text-black font-black py-4 tracking-widest hover:bg-zinc-200 transition-all uppercase rounded-xl">
-                RETURN TO DASHBOARD
-              </button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    return "";
-  }
-
   // -------------------------------------------------------
-  // ROW RENDERING FOR DIFFERENT EXERCISE TYPES
+  // TOP APP BAR
   // -------------------------------------------------------
-  function renderRow(name, log) {
-    if (!log) return "";
-    const exAttr = escapeAttr(name);
-
-    // 1. SPORTS (Football, Basketball, Volleyball, Cricket, Badminton, etc.)
-    if (log.kind === "SPORT") {
-      const cfg = SPORT_CONFIGS[log.sportType] || { positions: ["General Player"] };
-      const posOptions = cfg.positions.map(p => `
-        <option value="${escapeAttr(p)}" ${log.position === p ? "selected" : ""}>${escapeHtml(p)}</option>
-      `).join("");
-
-      return `
-        <div class="bg-zinc-900/60 p-4 rounded-2xl border border-zinc-800 flex flex-col gap-3">
-          <div class="flex justify-between items-start">
-            <div>
-              <h3 class="font-bold text-white text-sm tracking-tight">${escapeHtml(name)}</h3>
-              <span class="text-[9px] font-bold text-blue-400 uppercase tracking-widest block mt-0.5">SPORT • TIME & POSITION PLAYED</span>
-            </div>
-            <span class="text-[10px] font-bold bg-blue-950/60 text-blue-300 border border-blue-900/50 px-2 py-0.5 rounded-md">DIFFICULTY: ${log.difficulty || 7}/10</span>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2.5">
-            <div>
-              <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">Time Played (Mins)</label>
-              <input data-a="sport-mins" data-ex="${exAttr}" type="number" placeholder="0" value="${log.mins || ""}"
-                class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-3 text-white font-mono text-sm outline-none border border-zinc-700/60 focus:border-blue-500" />
-            </div>
-            <div>
-              <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">Position Played</label>
-              <select data-a="sport-pos" data-ex="${exAttr}"
-                class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-2.5 text-white text-xs font-bold outline-none border border-zinc-700/60 focus:border-blue-500">
-                ${posOptions}
-              </select>
-            </div>
-          </div>
-
-          <div>
-            <div class="flex justify-between text-[9px] font-bold text-zinc-400 uppercase mb-1">
-              <span>Match Intensity / Difficulty</span>
-              <span class="text-white">${log.difficulty || 7} / 10</span>
-            </div>
-            <input data-a="sport-diff" data-ex="${exAttr}" type="range" min="1" max="10" value="${log.difficulty || 7}"
-              class="w-full accent-blue-500 cursor-pointer" />
-          </div>
-        </div>
-      `;
-    }
-
-    // 2. RUNNING / SPRINTING
-    if (log.kind === "RUNNING") {
-      const mins = Number(log.mins) || 0;
-      const km = Number(log.distanceKm) || 0;
-      const speed = mins > 0 && km > 0 ? (km / (mins / 60)) : 0;
-      const pace = km > 0 && mins > 0 ? (mins / km) : 0;
-      const paceStr = pace ? `${Math.floor(pace)}:${String(Math.round((pace - Math.floor(pace)) * 60)).padStart(2,"0")} /km` : "-";
-
-      return `
-        <div class="bg-zinc-900/60 p-4 rounded-2xl border border-zinc-800 flex flex-col gap-3">
-          <div>
-            <h3 class="font-bold text-white text-sm tracking-tight">${escapeHtml(name)}</h3>
-            <span class="text-[9px] font-bold text-blue-400 uppercase tracking-widest block mt-0.5">CARDIO • DISTANCE & SPEED</span>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2.5">
-            <div>
-              <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">Time (Mins)</label>
-              <input data-a="run-mins" data-ex="${exAttr}" type="number" placeholder="0" value="${log.mins || ""}"
-                class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-3 text-white font-mono text-sm outline-none border border-zinc-700/60 focus:border-blue-500" />
-            </div>
-            <div>
-              <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">Distance (KM)</label>
-              <input data-a="run-km" data-ex="${exAttr}" type="number" step="0.01" placeholder="0.00" value="${log.distanceKm || ""}"
-                class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-3 text-white font-mono text-sm outline-none border border-zinc-700/60 focus:border-blue-500" />
-            </div>
-          </div>
-
-          <div class="text-[11px] text-zinc-400 bg-black/40 px-3 py-1.5 rounded-xl border border-zinc-800 flex items-center justify-between">
-            <span>Speed: <strong class="text-white">${speed ? speed.toFixed(2) : "-"}</strong> km/h</span>
-            <span class="text-zinc-600">|</span>
-            <span>Pace: <strong class="text-white">${paceStr}</strong></span>
-          </div>
-        </div>
-      `;
-    }
-
-    // 3. CYCLING / GENERAL CARDIO / MACHINE
-    if (log.kind === "CYCLING" || log.kind === "CARDIO_GENERAL") {
-      return `
-        <div class="bg-zinc-900/60 p-4 rounded-2xl border border-zinc-800 flex flex-col gap-3">
-          <div>
-            <h3 class="font-bold text-white text-sm tracking-tight">${escapeHtml(name)}</h3>
-            <span class="text-[9px] font-bold text-blue-400 uppercase tracking-widest block mt-0.5">CARDIO / CONDITIONING • DURATION</span>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2.5">
-            <div>
-              <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">Time (Mins)</label>
-              <input data-a="cardio-mins" data-ex="${exAttr}" type="number" placeholder="0" value="${log.mins || ""}"
-                class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-3 text-white font-mono text-sm outline-none border border-zinc-700/60 focus:border-blue-500" />
-            </div>
-            <div>
-              <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">Intensity (1-10)</label>
-              <input data-a="cardio-diff" data-ex="${exAttr}" type="number" min="1" max="10" placeholder="6" value="${log.difficulty || "6"}"
-                class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-3 text-white font-mono text-sm outline-none border border-zinc-700/60 focus:border-blue-500" />
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // 4. MOBILITY / STRETCH
-    if (log.kind === "MOBILITY") {
-      return `
-        <div class="bg-zinc-900/60 p-4 rounded-2xl border border-zinc-800 flex flex-col gap-3">
-          <div>
-            <h3 class="font-bold text-white text-sm tracking-tight">${escapeHtml(name)}</h3>
-            <span class="text-[9px] font-bold text-blue-400 uppercase tracking-widest block mt-0.5">RECOVERY & MOBILITY</span>
-          </div>
-          <div>
-            <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">Hold / Routine Time (Mins)</label>
-            <input data-a="cardio-mins" data-ex="${exAttr}" type="number" placeholder="0" value="${log.mins || ""}"
-              class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-3 text-white font-mono text-sm outline-none border border-zinc-700/60 focus:border-blue-500" />
-          </div>
-        </div>
-      `;
-    }
-
-    // 5. ISOMETRIC / SKILL
-    if (log.kind === "ISOMETRIC") {
-      return `
-        <div class="bg-zinc-900/60 p-4 rounded-2xl border border-zinc-800 flex flex-col gap-3">
-          <div>
-            <h3 class="font-bold text-white text-sm tracking-tight">${escapeHtml(name)}</h3>
-            <span class="text-[9px] font-bold text-blue-400 uppercase tracking-widest block mt-0.5">ISOMETRIC HOLD • SECONDS</span>
-          </div>
-          <div class="grid grid-cols-2 gap-2.5">
-            <div>
-              <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">Hold Secs</label>
-              <input data-a="iso-secs" data-ex="${exAttr}" type="number" placeholder="0" value="${log.secs || ""}"
-                class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-3 text-white font-mono text-sm outline-none border border-zinc-700/60 focus:border-blue-500" />
-            </div>
-            <div>
-              <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">Difficulty (1-10)</label>
-              <input data-a="iso-diff" data-ex="${exAttr}" type="number" min="1" max="10" placeholder="6" value="${log.difficulty || "6"}"
-                class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-3 text-white font-mono text-sm outline-none border border-zinc-700/60 focus:border-blue-500" />
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // 6. DEFAULT STRENGTH EXERCISE
-    const abTag = log.isAbdominal ? `<span class="text-[9px] font-bold text-blue-400 uppercase tracking-widest block mt-0.5">+5KG ANKLE WEIGHTS RECOM.</span>` : "";
-
+  function renderTopAppBar() {
     return `
-      <div class="bg-zinc-900/60 p-4 rounded-2xl border border-zinc-800 flex flex-col gap-3">
-        <div class="flex justify-between items-start">
-          <div class="flex-1">
-            <h3 class="font-bold text-white text-sm tracking-tight">${escapeHtml(name)}</h3>
-            ${abTag}
+      <header class="px-3.5 py-2.5 border-b border-zinc-900 flex items-center justify-between gap-2 shrink-0 bg-black/95 sticky top-0 z-30">
+        <div class="flex items-center gap-2">
+          <img src="./app_logo.jpg" alt="BURN" class="w-8 h-8 rounded-lg border border-zinc-800 object-cover shadow-sm" />
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h1 class="text-xl font-black tracking-tight text-white leading-none">BURN</h1>
+              <span class="text-[9px] font-black bg-blue-950 text-blue-400 border border-blue-900 px-1.5 py-0.5 rounded">PRO</span>
+            </div>
+            <p class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest mt-0.5">PROGRESSIVE OVERLOAD ENGINE</p>
           </div>
-          <button data-a="toggle-mode" data-ex="${exAttr}"
-            class="text-[10px] font-black border border-zinc-700 px-2.5 py-1 rounded-lg hover:bg-zinc-800 text-zinc-300 uppercase tracking-wider transition">
-            ${log.mode === "REPS" ? "REPS" : "SECS"}
-          </button>
         </div>
 
-        <div class="grid grid-cols-2 gap-2.5">
-          <div>
-            <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">${log.mode === "REPS" ? "Reps" : "Secs"}</label>
-            <input data-a="str-val" data-ex="${exAttr}" type="number" placeholder="0" value="${log.value || ""}"
-              class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-3 text-white font-mono text-sm outline-none border border-zinc-700/60 focus:border-blue-500" />
-          </div>
-          <div>
-            <label class="text-[9px] font-bold text-zinc-400 uppercase mb-1 block">Weight (kg)</label>
-            <input data-a="str-wt" data-ex="${exAttr}" type="number" placeholder="0" value="${log.weight || ""}"
-              class="w-full bg-zinc-800/80 rounded-xl py-2.5 px-3 text-white font-mono text-sm outline-none border border-zinc-700/60 focus:border-blue-500" />
-          </div>
+        <div class="flex items-center gap-1.5">
+          <!-- Plate Calculator Quick Button -->
+          <button data-a="open-plate-calc" class="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700 transition" title="Barbell Plate Calculator">
+            <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="9" stroke-width="2"></circle>
+              <circle cx="12" cy="12" r="3" stroke-width="2"></circle>
+              <line x1="12" y1="3" x2="12" y2="6" stroke-width="2"></line>
+              <line x1="12" y1="18" x2="12" y2="21" stroke-width="2"></line>
+            </svg>
+          </button>
+
+          <!-- Settings Button -->
+          <button data-a="open-settings" class="p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white hover:border-zinc-700 transition" title="Settings">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+              <circle cx="12" cy="12" r="3" stroke-width="2"></circle>
+            </svg>
+          </button>
         </div>
-      </div>
+      </header>
     `;
   }
 
   // -------------------------------------------------------
-  // 30-DAY ROLLING HISTORY MODAL
+  // BOTTOM NAVIGATION BAR
   // -------------------------------------------------------
-  function renderHistoryModal() {
-    const past30 = getPast30DaysList();
-    const activeLogs = past30.filter(x => !x.isRest);
-    const total30Calories = activeLogs.reduce((acc, cur) => acc + (cur.calories || 0), 0);
-    const total30Duration = activeLogs.reduce((acc, cur) => acc + (cur.duration || 0), 0);
+  function renderBottomNavBar() {
+    const tabs = [
+      { id: "WORKOUT", label: "Workout", icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>` },
+      { id: "ROUTINES", label: "Routines", icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>` },
+      { id: "EXERCISES", label: "Library", icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>` },
+      { id: "MEASURE", label: "Metrics", icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>` },
+      { id: "HISTORY", label: "30D Log", icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>` }
+    ];
 
-    const items = past30.map(day => {
-      if (day.isRest) {
-        return `
-          <div class="bg-zinc-950/70 border border-zinc-800/60 p-3.5 rounded-xl flex items-center justify-between opacity-75">
-            <div>
-              <div class="flex items-center gap-2">
-                <span class="text-[11px] font-bold text-zinc-400">${day.dateFormatted}</span>
-                <span class="text-[9px] font-bold text-zinc-600 uppercase">(${day.dayName.slice(0,3)})</span>
-              </div>
-              <p class="text-xs font-bold text-zinc-500 uppercase mt-0.5">REST / RECOVERY DAY</p>
-            </div>
-            <span class="text-[10px] font-mono font-bold text-zinc-600 bg-zinc-900 px-2 py-1 rounded-md">NO WORKOUT</span>
-          </div>
-        `;
-      }
-
+    const buttons = tabs.map(t => {
+      const active = state.currentTab === t.id;
       return `
-        <button data-a="view-history-detail" data-key="${day.dateKey}"
-          class="w-full text-left bg-zinc-900/90 hover:bg-zinc-800/90 border border-zinc-800 p-3.5 rounded-xl flex items-center justify-between transition group">
-          <div>
-            <div class="flex items-center gap-2">
-              <span class="text-[11px] font-bold text-blue-400">${day.dateFormatted}</span>
-              <span class="text-[9px] font-bold text-zinc-400 uppercase">(${day.dayName.slice(0,3)})</span>
-            </div>
-            <p class="text-xs font-black text-white uppercase tracking-tight mt-0.5">${escapeHtml(day.splitName)}</p>
-            <p class="text-[10px] text-zinc-400 font-mono">${day.duration} mins • ${day.userWeight || 70} kg</p>
-          </div>
-          <div class="text-right">
-            <span class="text-base font-black text-blue-400 block">${day.calories}</span>
-            <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-wider">CALORIES</span>
-          </div>
+        <button data-a="switch-tab" data-tab="${t.id}" class="flex-1 py-1.5 flex flex-col items-center justify-center transition ${
+          active ? "text-blue-400 font-black" : "text-zinc-500 hover:text-zinc-300 font-bold"
+        }">
+          <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">${t.icon}</svg>
+          <span class="text-[9px] uppercase tracking-wider">${t.label}</span>
         </button>
       `;
     }).join("");
 
     return `
-      <div class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col justify-end">
-        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[85vh] flex flex-col space-y-4">
-          <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
+      <nav class="fixed bottom-0 left-0 right-0 max-w-lg mx-auto bg-zinc-950/95 border-t border-zinc-900 px-1 py-1 flex items-center justify-around z-40 backdrop-blur-md">
+        ${buttons}
+      </nav>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // REST TIMER FLOATING BANNER
+  // -------------------------------------------------------
+  function renderRestTimerBanner() {
+    const isRunning = window.BURN_TIMER.isActive();
+    const remaining = window.BURN_TIMER.getRemaining();
+    const timeFormatted = window.BURN_TIMER.formatTime(remaining);
+
+    return `
+      <div id="rest-timer-banner" class="${isRunning ? "" : "hidden"} fixed bottom-14 left-0 right-0 max-w-lg mx-auto px-3 z-30 pointer-events-none">
+        <div class="pointer-events-auto bg-blue-950/90 border border-blue-800/80 backdrop-blur-md rounded-2xl p-2.5 px-4 shadow-xl flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-ping"></span>
             <div>
-              <h3 class="font-black text-lg uppercase tracking-tight text-white">30-DAY WORKOUT HISTORY</h3>
-              <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">Auto-purges older than 30 days</p>
+              <span class="text-[9px] font-black uppercase text-blue-300 tracking-wider block">REST TIMER</span>
+              <span id="timer-display-time" class="text-lg font-black font-mono text-white leading-none">${timeFormatted}</span>
             </div>
-            <button data-a="close-history" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">
-              CLOSE
-            </button>
           </div>
 
-          <!-- Quick 30-Day Metrics -->
-          <div class="grid grid-cols-2 gap-2 bg-black/50 p-3 rounded-xl border border-zinc-800/80">
-            <div>
-              <span class="text-[9px] font-bold text-zinc-500 uppercase block">30D Active Sessions</span>
-              <span class="text-xl font-black text-white">${activeLogs.length} <span class="text-xs text-zinc-500 font-normal">/ 30 Days</span></span>
-            </div>
-            <div>
-              <span class="text-[9px] font-bold text-zinc-500 uppercase block">Total Burned</span>
-              <span class="text-xl font-black text-blue-400">${total30Calories.toLocaleString()} <span class="text-xs text-zinc-500 font-normal">kcal</span></span>
-            </div>
-          </div>
-
-          <div class="overflow-y-auto space-y-2 flex-1 pr-1">
-            ${items}
+          <div class="flex items-center gap-1.5">
+            <button data-a="timer-minus" class="px-2 py-1 text-[10px] font-bold bg-blue-900/60 hover:bg-blue-900 border border-blue-700/60 rounded-lg text-white transition">-15s</button>
+            <button data-a="timer-plus" class="px-2 py-1 text-[10px] font-bold bg-blue-900/60 hover:bg-blue-900 border border-blue-700/60 rounded-lg text-white transition">+15s</button>
+            <button data-a="timer-skip" class="px-2.5 py-1 text-[10px] font-bold bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-lg text-zinc-300 transition">Skip</button>
           </div>
         </div>
       </div>
@@ -1467,39 +318,1095 @@ Return ONLY raw JSON with keys "calories" (number), "targetedMuscles" (array of 
   }
 
   // -------------------------------------------------------
-  // HISTORY DETAIL MODAL
+  // TAB ROUTING
   // -------------------------------------------------------
-  function renderHistoryDetailModal(entry) {
-    const muscles = (entry.targetedMuscles || []).map(m => `
-      <span class="text-[10px] font-bold bg-zinc-800 text-zinc-300 px-2.5 py-1 rounded-md">${escapeHtml(m)}</span>
-    `).join("");
+  function renderTabContent() {
+    if (state.activeWorkout && state.currentTab === "WORKOUT") {
+      return renderActiveWorkoutView();
+    }
+
+    switch (state.currentTab) {
+      case "WORKOUT":
+        return renderWorkoutHomeView();
+      case "ROUTINES":
+        return renderRoutinesView();
+      case "EXERCISES":
+        return renderExerciseLibraryView();
+      case "MEASURE":
+        return renderMeasurementsView();
+      case "HISTORY":
+        return renderHistoryView();
+      default:
+        return renderWorkoutHomeView();
+    }
+  }
+
+  // -------------------------------------------------------
+  // 1. WORKOUT HOME VIEW (When no active workout)
+  // -------------------------------------------------------
+  function renderWorkoutHomeView() {
+    const routines = window.BURN_STORAGE.getRoutines();
+    const todayDay = new Date().getDay(); // 0 = Sun, 1 = Mon ...
+    const dayMap = [6, 0, 1, 2, 3, 4, 5]; // mapped to standard splits
+    const suggestedRoutine = routines[dayMap[todayDay] % routines.length] || routines[0];
+
+    return `
+      <div class="fade-step space-y-4 py-2">
+        <!-- Quick Start Card -->
+        <div class="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-black tracking-widest text-blue-400 uppercase">RECOMMENDED SESSION</span>
+            <span class="text-[9px] font-bold text-zinc-400 bg-zinc-800/80 px-2 py-0.5 rounded-full">${new Date().toLocaleDateString("en-US", { weekday: "long" })}</span>
+          </div>
+
+          <div>
+            <h2 class="text-2xl font-black uppercase text-white tracking-tight leading-tight">${escapeHtml(suggestedRoutine.name)}</h2>
+            <p class="text-xs text-zinc-400 mt-1">${suggestedRoutine.exercises.length} calibrated exercises • Progressive Overload</p>
+          </div>
+
+          <div class="flex flex-wrap gap-1 pt-1">
+            ${suggestedRoutine.exercises.slice(0, 5).map(e => `
+              <span class="text-[10px] font-bold bg-zinc-800/60 text-zinc-300 border border-zinc-700/50 px-2 py-0.5 rounded">${escapeHtml(e)}</span>
+            `).join("")}
+            ${suggestedRoutine.exercises.length > 5 ? `<span class="text-[10px] font-bold text-zinc-500 py-0.5">+${suggestedRoutine.exercises.length - 5} more</span>` : ""}
+          </div>
+
+          <button data-a="start-routine" data-id="${suggestedRoutine.id}" class="w-full py-4 text-sm font-black uppercase tracking-widest text-white accent-bg hover:brightness-110 active:scale-[0.99] rounded-xl shadow-lg shadow-blue-950/40 transition flex items-center justify-center gap-2">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            START THIS WORKOUT
+          </button>
+        </div>
+
+        <!-- Quick Routine Pickers -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between px-1">
+            <h3 class="text-xs font-black uppercase tracking-wider text-zinc-400">ALL ROUTINE SPLITS</h3>
+            <button data-a="open-new-routine" class="text-[10px] font-bold text-blue-400 hover:text-blue-300 uppercase tracking-wider">+ Create Routine</button>
+          </div>
+
+          <div class="grid grid-cols-1 gap-2.5">
+            ${routines.map(r => `
+              <div class="bg-zinc-900/70 border border-zinc-800 hover:border-zinc-700 rounded-xl p-3.5 flex items-center justify-between transition">
+                <div class="min-w-0 pr-3">
+                  <h4 class="font-black text-sm text-white uppercase tracking-tight truncate">${escapeHtml(r.name)}</h4>
+                  <p class="text-[10px] text-zinc-500 font-bold mt-0.5">${r.exercises.length} exercises</p>
+                </div>
+                <button data-a="start-routine" data-id="${r.id}" class="px-3.5 py-2 text-xs font-black uppercase tracking-wider bg-blue-950 text-blue-300 border border-blue-900 hover:bg-blue-900 hover:text-white rounded-lg transition shrink-0">
+                  START
+                </button>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // 2. ACTIVE WORKOUT LOGGING VIEW (Hevy-style in-gym logger)
+  // -------------------------------------------------------
+  function renderActiveWorkoutView() {
+    const workout = state.activeWorkout;
+    if (!workout) return "";
+
+    const exerciseCards = workout.exercises.map((ex, exIdx) => {
+      const dbEx = window.BURN_STORAGE.getAllExercises().find(e => e.name.toUpperCase() === ex.name.toUpperCase());
+      const isBarbell = ex.name.toLowerCase().includes("barbell") || ex.name.toLowerCase().includes("bench") || ex.name.toLowerCase().includes("squat") || ex.name.toLowerCase().includes("deadlift");
+
+      const setsRows = ex.sets.map((set, setIdx) => {
+        const prevSet = ex.previous?.sets?.[setIdx];
+        const prevText = prevSet ? `${prevSet.weight}kg × ${prevSet.reps}` : "—";
+        const estimated1RM = set.weight && set.reps ? window.BURN_CALC.calculate1RM(set.weight, set.reps) : null;
+
+        // Set type badges: NORMAL (1, 2, 3), WARMUP (W), DROP (D), FAILURE (F)
+        let typeBadge = `${set.setNum}`;
+        let typeClass = "bg-zinc-800 text-zinc-300";
+        if (set.type === "WARMUP") {
+          typeBadge = "W";
+          typeClass = "bg-amber-950 text-amber-300 border border-amber-800";
+        } else if (set.type === "DROP") {
+          typeBadge = "D";
+          typeClass = "bg-purple-950 text-purple-300 border border-purple-800";
+        } else if (set.type === "FAILURE") {
+          typeBadge = "F";
+          typeClass = "bg-red-950 text-red-300 border border-red-800";
+        }
+
+        const isCompleted = set.completed;
+
+        return `
+          <div class="grid grid-cols-12 gap-1.5 items-center py-1.5 ${isCompleted ? "opacity-95" : ""}">
+            <!-- Set Type / Number Button (Tap to toggle type) -->
+            <div class="col-span-2 flex items-center justify-center">
+              <button data-a="cycle-set-type" data-exidx="${exIdx}" data-setidx="${setIdx}"
+                class="w-7 h-7 rounded-lg text-xs font-black font-mono transition flex items-center justify-center ${typeClass}"
+                title="Tap to change set type (Normal, Warmup, Drop, Failure)">
+                ${typeBadge}
+              </button>
+            </div>
+
+            <!-- PREVIOUS Column (One-Tap Autofill!) -->
+            <div class="col-span-3 text-center">
+              <button data-a="autofill-previous" data-exidx="${exIdx}" data-setidx="${setIdx}"
+                class="w-full py-1 text-[10px] font-mono font-bold text-zinc-400 hover:text-blue-400 bg-zinc-950/60 hover:bg-zinc-900 border border-zinc-800/80 rounded-md transition truncate px-1"
+                title="Tap to quick autofill with previous values">
+                ${prevText}
+              </button>
+            </div>
+
+            <!-- KG / Weight Input -->
+            <div class="col-span-3">
+              <input data-a="set-weight" data-exidx="${exIdx}" data-setidx="${setIdx}"
+                type="number" step="0.5" placeholder="0" value="${set.weight !== "" ? set.weight : ""}"
+                class="w-full py-1.5 px-2 bg-zinc-800/90 focus:bg-zinc-800 border ${isCompleted ? "border-emerald-800/60 text-emerald-300" : "border-zinc-700/80 text-white"} focus:border-blue-500 rounded-lg text-center font-mono font-bold text-sm outline-none" />
+            </div>
+
+            <!-- Reps Input -->
+            <div class="col-span-2">
+              <input data-a="set-reps" data-exidx="${exIdx}" data-setidx="${setIdx}"
+                type="number" placeholder="0" value="${set.reps !== "" ? set.reps : ""}"
+                class="w-full py-1.5 px-1 bg-zinc-800/90 focus:bg-zinc-800 border ${isCompleted ? "border-emerald-800/60 text-emerald-300" : "border-zinc-700/80 text-white"} focus:border-blue-500 rounded-lg text-center font-mono font-bold text-sm outline-none" />
+            </div>
+
+            <!-- Checkmark / Complete Button -->
+            <div class="col-span-2 flex items-center justify-center">
+              <button data-a="toggle-complete-set" data-exidx="${exIdx}" data-setidx="${setIdx}"
+                class="w-7 h-7 rounded-lg flex items-center justify-center transition ${
+                  isCompleted
+                    ? "bg-emerald-600 hover:bg-emerald-500 text-white shadow-sm shadow-emerald-950"
+                    : "bg-zinc-800 hover:bg-zinc-700 text-zinc-500 hover:text-white"
+                }"
+                title="Mark set completed">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Exercise 1RM best in current session
+      const validSets = ex.sets.filter(s => Number(s.weight) > 0 && Number(s.reps) > 0);
+      const bestSession1RM = validSets.length > 0 ? Math.max(...validSets.map(s => window.BURN_CALC.calculate1RM(s.weight, s.reps))) : null;
+
+      return `
+        <div class="bg-zinc-900/90 border border-zinc-800 rounded-2xl p-3.5 space-y-3">
+          <!-- Exercise Header -->
+          <div class="flex items-start justify-between gap-2 border-b border-zinc-800/80 pb-2">
+            <div class="min-w-0 flex-1">
+              <!-- Clickable exercise title opens exercise history & cues modal -->
+              <button data-a="open-ex-history" data-name="${escapeAttr(ex.name)}"
+                class="text-left font-black text-sm text-white hover:text-blue-400 uppercase tracking-tight flex items-center gap-1.5 group">
+                <span class="truncate">${escapeHtml(ex.name)}</span>
+                <svg class="w-3.5 h-3.5 text-zinc-500 group-hover:text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </button>
+              
+              <div class="flex items-center gap-2 mt-0.5">
+                <span class="text-[9px] font-bold text-blue-400 uppercase tracking-wider">${escapeHtml(ex.category)}</span>
+                ${bestSession1RM ? `<span class="text-[9px] font-mono font-bold text-amber-400 bg-amber-950/40 border border-amber-900/40 px-1.5 py-0.2 rounded">Est 1RM: ${bestSession1RM} kg</span>` : ""}
+              </div>
+            </div>
+
+            <!-- Action buttons for exercise: Plate Calc, Remove -->
+            <div class="flex items-center gap-1 shrink-0">
+              ${isBarbell ? `
+                <button data-a="calc-plates-for-ex" data-exidx="${exIdx}" class="p-1.5 bg-zinc-800 hover:bg-zinc-700 text-blue-400 rounded-lg text-xs" title="Plate Calculator">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" stroke-width="2"></circle><circle cx="12" cy="12" r="3" stroke-width="2"></circle></svg>
+                </button>
+              ` : ""}
+              <button data-a="remove-exercise" data-exidx="${exIdx}" class="p-1.5 text-zinc-500 hover:text-red-400 rounded-lg" title="Remove exercise">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- In-Set Notes Field -->
+          <div>
+            <input data-a="exercise-note" data-exidx="${exIdx}" type="text" placeholder="Add note (seat height, tempo, cues)..."
+              value="${escapeAttr(ex.note || "")}"
+              class="w-full text-[11px] bg-black/40 border border-zinc-800/80 focus:border-zinc-700 rounded-lg px-2.5 py-1.5 text-zinc-300 placeholder-zinc-600 outline-none" />
+          </div>
+
+          <!-- Sets Table Header -->
+          <div class="grid grid-cols-12 gap-1.5 text-[9px] font-black uppercase tracking-wider text-zinc-500 text-center px-1">
+            <div class="col-span-2">SET</div>
+            <div class="col-span-3">PREVIOUS</div>
+            <div class="col-span-3">KG</div>
+            <div class="col-span-2">REPS</div>
+            <div class="col-span-2">DONE</div>
+          </div>
+
+          <!-- Sets Rows -->
+          <div class="space-y-1">
+            ${setsRows}
+          </div>
+
+          <!-- Add Set Button -->
+          <div class="pt-1 flex items-center justify-between">
+            <button data-a="add-set" data-exidx="${exIdx}"
+              class="py-1.5 px-3 text-xs font-bold text-zinc-300 hover:text-white bg-zinc-800/70 hover:bg-zinc-800 border border-zinc-700/60 rounded-lg transition flex items-center gap-1">
+              <span class="text-blue-400 font-black">+</span> Add Set
+            </button>
+            <span class="text-[9px] text-zinc-500 font-bold uppercase tracking-wider">Rest: ${ex.restTimerSeconds || 90}s</span>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="fade-step space-y-4 pb-20">
+        <!-- Live Workout Sub-Header -->
+        <div class="flex items-center justify-between pb-2 border-b border-zinc-800">
+          <div>
+            <span class="text-[9px] font-black text-blue-400 uppercase tracking-widest block">IN-GYM LIVE SESSION</span>
+            <h2 class="text-lg font-black uppercase text-white tracking-tight leading-none">${escapeHtml(workout.routineName)}</h2>
+          </div>
+          <button data-a="finish-workout" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-wider rounded-xl transition shadow-md shadow-emerald-950">
+            FINISH WORKOUT
+          </button>
+        </div>
+
+        <!-- Exercise Cards -->
+        <div class="space-y-3.5">
+          ${exerciseCards}
+        </div>
+
+        <!-- Add Exercise to Workout Button -->
+        <div class="pt-2 space-y-2">
+          <button data-a="open-add-ex-workout" class="w-full py-3.5 border border-dashed border-zinc-700 hover:border-zinc-500 bg-zinc-950 hover:bg-zinc-900 rounded-xl text-xs font-black uppercase tracking-widest text-zinc-300 hover:text-white transition flex items-center justify-center gap-2">
+            <span class="text-blue-400 text-base leading-none">+</span> ADD EXERCISE
+          </button>
+
+          <button data-a="cancel-workout" class="w-full py-2 text-[11px] font-bold text-zinc-500 hover:text-red-400 uppercase tracking-widest transition">
+            Discard Workout
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // 3. ROUTINES TAB
+  // -------------------------------------------------------
+  function renderRoutinesView() {
+    const routines = window.BURN_STORAGE.getRoutines();
+
+    return `
+      <div class="fade-step space-y-4 py-2">
+        <div class="flex items-center justify-between pb-1 border-b border-zinc-900">
+          <div>
+            <h2 class="text-xl font-black uppercase tracking-tight text-white">ROUTINE PROGRAMS</h2>
+            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Structured workout splits</p>
+          </div>
+          <button data-a="open-new-routine" class="px-3 py-1.5 text-xs font-black bg-blue-600 hover:bg-blue-500 text-white uppercase rounded-lg transition shadow-sm">
+            + NEW ROUTINE
+          </button>
+        </div>
+
+        <div class="space-y-3">
+          ${routines.map(r => `
+            <div class="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-4 space-y-3">
+              <div class="flex items-start justify-between">
+                <div>
+                  <h3 class="font-black text-base uppercase text-white tracking-tight">${escapeHtml(r.name)}</h3>
+                  <span class="text-[9px] font-bold text-blue-400 uppercase tracking-wider">${escapeHtml(r.split || "CUSTOM")}</span>
+                </div>
+                <div class="flex items-center gap-1">
+                  <button data-a="edit-routine" data-id="${r.id}" class="text-[10px] font-bold text-zinc-400 hover:text-white px-2 py-1 bg-zinc-800 rounded">
+                    Edit
+                  </button>
+                  ${!r.id.startsWith("routine_") ? `
+                    <button data-a="delete-routine" data-id="${r.id}" class="text-[10px] font-bold text-red-400 hover:text-red-300 px-2 py-1 bg-zinc-800 rounded">
+                      ✕
+                    </button>
+                  ` : ""}
+                </div>
+              </div>
+
+              <div class="flex flex-wrap gap-1.5">
+                ${(r.exercises || []).map(ex => `
+                  <span class="text-[10px] font-bold bg-black/50 text-zinc-300 border border-zinc-800 px-2 py-0.5 rounded">${escapeHtml(ex)}</span>
+                `).join("")}
+              </div>
+
+              <button data-a="start-routine" data-id="${r.id}" class="w-full py-2.5 bg-zinc-800 hover:bg-blue-900 text-zinc-200 hover:text-white text-xs font-black uppercase tracking-widest rounded-xl transition">
+                START WORKOUT
+              </button>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // 4. EXERCISE LIBRARY TAB
+  // -------------------------------------------------------
+  function renderExerciseLibraryView() {
+    const all = window.BURN_STORAGE.getAllExercises();
+    const categories = ["ALL", "CHEST", "BACK", "SHOULDERS", "LEGS", "ARMS", "CORE"];
+
+    return `
+      <div class="fade-step space-y-3.5 py-2">
+        <div class="flex items-center justify-between pb-1 border-b border-zinc-900">
+          <div>
+            <h2 class="text-xl font-black uppercase tracking-tight text-white">EXERCISE LIBRARY</h2>
+            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">${all.length} movements available</p>
+          </div>
+          <button data-a="open-custom-ex" class="px-2.5 py-1.5 text-xs font-black bg-zinc-800 hover:bg-zinc-700 text-blue-400 border border-zinc-700 rounded-lg transition">
+            + CUSTOM
+          </button>
+        </div>
+
+        <!-- Search Bar -->
+        <div>
+          <input id="lib-search" type="text" placeholder="Search exercises by name..."
+            class="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-3.5 py-2.5 text-sm text-white font-bold outline-none focus:border-blue-500 transition" />
+        </div>
+
+        <!-- Exercise List -->
+        <div id="lib-list" class="space-y-1.5 max-h-[65vh] overflow-y-auto pr-1">
+          ${all.map(ex => `
+            <button data-a="open-ex-history" data-name="${escapeAttr(ex.name)}"
+              class="w-full text-left bg-zinc-900/60 hover:bg-zinc-800 border border-zinc-800/80 p-3 rounded-xl flex items-center justify-between transition group">
+              <div class="min-w-0 pr-2">
+                <h4 class="font-bold text-sm text-white tracking-tight group-hover:text-blue-400 transition truncate">${escapeHtml(ex.name)}</h4>
+                <span class="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">${escapeHtml(ex.category)} • ${escapeHtml(ex.primary || "Strength")}</span>
+              </div>
+              <svg class="w-4 h-4 text-zinc-600 group-hover:text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // 5. BODY METRICS & MEASUREMENTS TAB
+  // -------------------------------------------------------
+  function renderMeasurementsView() {
+    const list = window.BURN_STORAGE.getMeasurements();
+
+    return `
+      <div class="fade-step space-y-4 py-2">
+        <div class="flex items-center justify-between pb-1 border-b border-zinc-900">
+          <div>
+            <h2 class="text-xl font-black uppercase tracking-tight text-white">BODY METRICS</h2>
+            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">Weight & circumference tracking</p>
+          </div>
+          <button data-a="open-measure-modal" class="px-3 py-1.5 text-xs font-black bg-blue-600 hover:bg-blue-500 text-white uppercase rounded-lg transition shadow-sm">
+            + LOG METRICS
+          </button>
+        </div>
+
+        ${list.length === 0 ? `
+          <div class="text-center py-10 bg-zinc-950/60 rounded-2xl border border-zinc-900 p-6 space-y-2">
+            <svg class="w-8 h-8 text-zinc-700 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <p class="text-xs font-bold text-zinc-400 uppercase">No measurements recorded yet</p>
+            <p class="text-[10px] text-zinc-600">Track your weight, body fat %, and circumference measurements alongside progressive volume.</p>
+          </div>
+        ` : `
+          <div class="space-y-2.5">
+            ${list.map(m => `
+              <div class="bg-zinc-900/80 border border-zinc-800 rounded-xl p-3.5 space-y-2">
+                <div class="flex items-center justify-between border-b border-zinc-800/60 pb-1.5">
+                  <span class="text-xs font-black text-blue-400 font-mono">${m.date}</span>
+                  <span class="text-sm font-black text-white">${m.weightKg ? `${m.weightKg} kg` : "—"}</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2 text-center text-[10px]">
+                  <div class="bg-black/40 p-1.5 rounded border border-zinc-800/80">
+                    <span class="text-zinc-500 block text-[8px] uppercase">Body Fat</span>
+                    <span class="font-bold text-zinc-200">${m.bodyFat ? `${m.bodyFat}%` : "—"}</span>
+                  </div>
+                  <div class="bg-black/40 p-1.5 rounded border border-zinc-800/80">
+                    <span class="text-zinc-500 block text-[8px] uppercase">Chest</span>
+                    <span class="font-bold text-zinc-200">${m.chestCm ? `${m.chestCm}cm` : "—"}</span>
+                  </div>
+                  <div class="bg-black/40 p-1.5 rounded border border-zinc-800/80">
+                    <span class="text-zinc-500 block text-[8px] uppercase">Waist</span>
+                    <span class="font-bold text-zinc-200">${m.waistCm ? `${m.waistCm}cm` : "—"}</span>
+                  </div>
+                  <div class="bg-black/40 p-1.5 rounded border border-zinc-800/80">
+                    <span class="text-zinc-500 block text-[8px] uppercase">Arms</span>
+                    <span class="font-bold text-zinc-200">${m.armsCm ? `${m.armsCm}cm` : "—"}</span>
+                  </div>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `}
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // 6. 30-DAY LOGS TAB (With full set details, reps & weights)
+  // -------------------------------------------------------
+  function renderHistoryView() {
+    const sessions = window.BURN_STORAGE.getPast30DaysSessions();
+
+    return `
+      <div class="fade-step space-y-4 py-2">
+        <div class="flex items-center justify-between pb-1 border-b border-zinc-900">
+          <div>
+            <h2 class="text-xl font-black uppercase tracking-tight text-white">30-DAY WORKOUT LOG</h2>
+            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">${sessions.length} completed sessions recorded</p>
+          </div>
+        </div>
+
+        ${sessions.length === 0 ? `
+          <div class="text-center py-12 bg-zinc-950/60 rounded-2xl border border-zinc-900 p-6 space-y-2">
+            <p class="text-xs font-bold text-zinc-400 uppercase">No completed workouts yet</p>
+            <p class="text-[10px] text-zinc-600">Start a session and tick off your completed sets to view your comprehensive 30-day activity logs.</p>
+          </div>
+        ` : `
+          <div class="space-y-3">
+            ${sessions.map(s => `
+              <button data-a="view-history-detail" data-id="${s.id}"
+                class="w-full text-left bg-zinc-900/80 hover:bg-zinc-800/90 border border-zinc-800 p-4 rounded-2xl transition space-y-2.5 group">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <span class="text-[10px] font-mono font-bold text-blue-400">${s.dateKey}</span>
+                    <h3 class="font-black text-base text-white uppercase tracking-tight group-hover:text-blue-300 transition">${escapeHtml(s.routineName)}</h3>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-base font-black text-white font-mono">${s.totalVolumeKg ? `${s.totalVolumeKg.toLocaleString()} kg` : "—"}</span>
+                    <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest block">VOLUME</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-3 text-xs text-zinc-400 font-mono">
+                  <span>⏱ ${s.duration} mins</span>
+                  <span>•</span>
+                  <span>${s.totalSets || 0} sets</span>
+                  <span>•</span>
+                  <span>${s.totalReps || 0} reps</span>
+                </div>
+
+                <!-- Exercise List with Sets/Reps/Weight Snippet -->
+                <div class="border-t border-zinc-800/80 pt-2 space-y-1">
+                  ${(s.exercises || []).map(ex => {
+                    const completedSets = (ex.sets || []).filter(st => st.completed || st.reps > 0);
+                    const setSummaries = completedSets.map(st => `${st.weight}kg×${st.reps}`).join(", ");
+                    return `
+                      <div class="flex items-baseline justify-between text-[11px]">
+                        <span class="font-bold text-zinc-300 truncate pr-2">${escapeHtml(ex.name)}</span>
+                        <span class="font-mono text-zinc-500 text-[10px] shrink-0">${setSummaries || `${completedSets.length} sets`}</span>
+                      </div>
+                    `;
+                  }).join("")}
+                </div>
+              </button>
+            `).join("")}
+          </div>
+        `}
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // MODAL: PLATE CALCULATOR
+  // -------------------------------------------------------
+  function renderPlateCalculatorModal() {
+    const calc = window.BURN_CALC.calculatePlates(state.plateModal.targetWeight, state.plateModal.barWeight);
 
     return `
       <div class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end">
         <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[85vh] flex flex-col space-y-4">
           <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
             <div>
-              <h3 class="font-black text-base uppercase tracking-tight text-white">${escapeHtml(entry.splitName)}</h3>
-              <p class="text-[10px] text-blue-400 font-mono font-bold">${entry.dateKey} • ${entry.duration} MINS • ${entry.userWeight} KG</p>
+              <h3 class="font-black text-base uppercase tracking-tight text-white">PLATE CALCULATOR</h3>
+              <p class="text-[10px] text-zinc-400 font-bold uppercase tracking-wider">Exact barbell plate configuration</p>
             </div>
-            <button data-a="close-history-detail" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">
-              CLOSE
-            </button>
+            <button data-a="close-plate-calc" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">CLOSE</button>
+          </div>
+
+          <!-- Target Weight Input -->
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Target Weight (KG)</label>
+              <input id="plate-target-input" type="number" step="0.5" value="${state.plateModal.targetWeight}"
+                class="w-full bg-zinc-800 rounded-xl p-3 text-white font-mono font-bold text-lg outline-none border border-zinc-700 focus:border-blue-500" />
+            </div>
+            <div>
+              <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Barbell Weight (KG)</label>
+              <select id="plate-bar-select" class="w-full bg-zinc-800 rounded-xl p-3.5 text-white font-mono font-bold text-sm outline-none border border-zinc-700">
+                <option value="20" ${state.plateModal.barWeight === 20 ? "selected" : ""}>20 kg (Standard Olympic)</option>
+                <option value="15" ${state.plateModal.barWeight === 15 ? "selected" : ""}>15 kg (Women's Olympic)</option>
+                <option value="10" ${state.plateModal.barWeight === 10 ? "selected" : ""}>10 kg (EZ Bar)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Result Display -->
+          <div class="bg-black/60 rounded-2xl p-4 border border-zinc-800 space-y-3">
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">PER SIDE LOAD</span>
+                <span class="text-2xl font-black text-blue-400 font-mono">${calc.weightPerSide} kg</span>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-wider block">TOTAL BARBELL</span>
+                <span class="text-2xl font-black text-white font-mono">${calc.totalAchieved} kg</span>
+              </div>
+            </div>
+
+            <!-- Plates Per Side Visual List -->
+            <div>
+              <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1.5">Plates Needed Per Side:</span>
+              <div class="flex flex-wrap gap-2">
+                ${calc.platesPerSide.length > 0 ? calc.platesPerSide.map(p => {
+                  const cfg = window.BURN_CALC.PLATE_COLORS[p] || { bg: "#3b82f6", text: "#fff" };
+                  return `
+                    <div class="px-3 py-1.5 rounded-lg font-mono font-black text-xs shadow-sm flex items-center gap-1 border border-white/20"
+                      style="background-color: ${cfg.bg}; color: ${cfg.text}">
+                      ${p} kg
+                    </div>
+                  `;
+                }).join("") : `<span class="text-xs text-zinc-500">Only empty barbell</span>`}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // MODAL: EXERCISE DETAIL & HISTORY MODAL
+  // -------------------------------------------------------
+  function renderExerciseDetailModal() {
+    const exName = state.exerciseDetailModal.exerciseName;
+    const dbEx = window.BURN_STORAGE.getAllExercises().find(e => e.name.toUpperCase() === exName.toUpperCase());
+    const historyLogs = window.BURN_STORAGE.getHistoryForExercise(exName);
+    const prs = window.BURN_STORAGE.getPRMap()[exName.toUpperCase()] || { maxWeight: 0, max1RM: 0, maxVolume: 0 };
+
+    // Prepare chart data points based on activeMetric
+    const activeMetric = state.exerciseDetailModal.activeMetric || "MAX_WEIGHT";
+    const chartPoints = historyLogs.slice(0, 10).reverse().map(log => {
+      let val = 0;
+      if (activeMetric === "MAX_WEIGHT") val = log.maxWeight;
+      else if (activeMetric === "1RM") val = log.max1RM;
+      else if (activeMetric === "VOLUME") val = log.volume;
+      else if (activeMetric === "REPS") val = log.sets.reduce((acc, s) => acc + (Number(s.reps) || 0), 0);
+
+      return {
+        label: log.dateKey.slice(5), // "08-29"
+        value: val
+      };
+    });
+
+    return `
+      <div class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end">
+        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[88vh] flex flex-col space-y-4">
+          <div class="flex justify-between items-start border-b border-zinc-800 pb-2">
+            <div>
+              <h3 class="font-black text-lg uppercase tracking-tight text-white">${escapeHtml(exName)}</h3>
+              <p class="text-[10px] text-blue-400 font-bold uppercase tracking-wider">${escapeHtml(dbEx?.category || "STRENGTH")} • ${escapeHtml(dbEx?.primary || "")}</p>
+            </div>
+            <button data-a="close-ex-history" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">CLOSE</button>
           </div>
 
           <div class="overflow-y-auto space-y-4 pr-1">
-            <div class="bg-black/50 p-4 rounded-xl border border-zinc-800">
-              <span class="text-4xl font-black text-white block leading-none">${entry.calories}</span>
-              <span class="text-xs font-bold text-blue-400 uppercase tracking-widest mt-1 block">CALORIES BURNED</span>
+            <!-- Personal Records Banner -->
+            <div class="grid grid-cols-3 gap-2 bg-black/60 p-3 rounded-xl border border-zinc-800 text-center">
+              <div>
+                <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest block">MAX WEIGHT</span>
+                <span class="text-base font-black text-amber-400 font-mono">${prs.maxWeight || 0} kg</span>
+              </div>
+              <div>
+                <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest block">EST. 1RM</span>
+                <span class="text-base font-black text-blue-400 font-mono">${prs.max1RM || 0} kg</span>
+              </div>
+              <div>
+                <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest block">BEST VOLUME</span>
+                <span class="text-base font-black text-emerald-400 font-mono">${prs.maxVolume || 0} kg</span>
+              </div>
             </div>
 
-            <div class="space-y-1.5">
-              <h4 class="text-xs font-bold text-zinc-300 uppercase">Targeted Muscles</h4>
-              <div class="flex flex-wrap gap-1.5">${muscles}</div>
+            <!-- Performance Chart Visualizer -->
+            <div class="space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-black uppercase text-zinc-400">PERFORMANCE GRAPH</span>
+                <div class="flex gap-1">
+                  ${["MAX_WEIGHT", "1RM", "VOLUME"].map(m => `
+                    <button data-a="switch-chart-metric" data-metric="${m}"
+                      class="text-[9px] font-bold px-2 py-1 rounded transition ${activeMetric === m ? "bg-blue-600 text-white" : "bg-zinc-800 text-zinc-400 hover:text-white"}">
+                      ${m === "MAX_WEIGHT" ? "WEIGHT" : m}
+                    </button>
+                  `).join("")}
+                </div>
+              </div>
+
+              ${window.BURN_CHARTS.renderTrendChart(chartPoints, activeMetric, "kg")}
             </div>
 
+            <!-- Movement Instructions & Form Cues -->
+            ${dbEx?.instructions ? `
+              <div class="space-y-1 bg-black/40 p-3 rounded-xl border border-zinc-800">
+                <span class="text-[10px] font-black uppercase tracking-wider text-blue-400 block">EXECUTION & FORM CUES</span>
+                <p class="text-xs text-zinc-300 leading-relaxed">${escapeHtml(dbEx.instructions)}</p>
+              </div>
+            ` : ""}
+
+            <!-- Chronological Log of Past Sessions -->
+            <div class="space-y-2">
+              <span class="text-xs font-black uppercase text-zinc-400 block">PAST SESSIONS HISTORY</span>
+              ${historyLogs.length === 0 ? `
+                <p class="text-xs text-zinc-600 py-3 text-center">No past logs for this exercise yet</p>
+              ` : `
+                <div class="space-y-2">
+                  ${historyLogs.map(h => `
+                    <div class="bg-zinc-950/70 border border-zinc-800/80 p-3 rounded-xl space-y-1.5">
+                      <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-mono font-bold text-blue-400">${h.dateKey}</span>
+                        <span class="text-[10px] font-mono text-zinc-400">Vol: ${h.volume} kg</span>
+                      </div>
+                      <div class="flex flex-wrap gap-1.5">
+                        ${h.sets.map((s, idx) => `
+                          <span class="text-[10px] font-mono bg-zinc-800 text-zinc-200 px-2 py-0.5 rounded">
+                            Set ${idx + 1}: ${s.weight}kg × ${s.reps}
+                          </span>
+                        `).join("")}
+                      </div>
+                      ${h.note ? `<p class="text-[10px] text-zinc-400 italic">"${escapeHtml(h.note)}"</p>` : ""}
+                    </div>
+                  `).join("")}
+                </div>
+              `}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // MODAL: ROUTINE EDITOR (Create / Edit Routine)
+  // -------------------------------------------------------
+  function renderRoutineEditorModal() {
+    const routine = state.routineEditorModal.routine;
+
+    return `
+      <div class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end">
+        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[85vh] flex flex-col space-y-4">
+          <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
+            <h3 class="font-black text-base uppercase tracking-tight text-white">${state.routineEditorModal.isNew ? "NEW ROUTINE" : "EDIT ROUTINE"}</h3>
+            <button data-a="close-routine-editor" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">CLOSE</button>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Routine Name</label>
+              <input id="edit-routine-name" type="text" value="${escapeAttr(routine.name)}" placeholder="e.g. Upper Body Hypertrophy"
+                class="w-full bg-zinc-800 rounded-xl p-3 text-white font-bold text-sm outline-none border border-zinc-700" />
+            </div>
+
+            <div>
+              <div class="flex justify-between items-center mb-1">
+                <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider">Exercises (${routine.exercises.length})</label>
+                <button data-a="open-add-ex-routine" class="text-[10px] font-bold text-blue-400 uppercase">+ Add Exercise</button>
+              </div>
+
+              <div class="max-h-[35vh] overflow-y-auto space-y-1.5 pr-1">
+                ${routine.exercises.map((ex, idx) => `
+                  <div class="bg-zinc-800/80 px-3 py-2 rounded-xl flex items-center justify-between border border-zinc-700/60">
+                    <span class="text-xs font-bold text-white truncate">${escapeHtml(ex)}</span>
+                    <button data-a="routine-remove-ex" data-idx="${idx}" class="text-red-400 hover:text-red-300 text-xs px-2">✕</button>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+
+          <button data-a="save-routine" class="w-full py-4 text-sm font-black uppercase tracking-widest text-white accent-bg rounded-xl">
+            SAVE ROUTINE
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // MODAL: CUSTOM EXERCISE CREATOR
+  // -------------------------------------------------------
+  function renderCustomExerciseModal() {
+    return `
+      <div class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end">
+        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[85vh] flex flex-col space-y-4">
+          <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
+            <h3 class="font-black text-base uppercase tracking-tight text-white">NEW CUSTOM MOVEMENT</h3>
+            <button data-a="close-custom-ex" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">CLOSE</button>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Exercise Name</label>
+              <input id="custom-ex-name" type="text" placeholder="e.g. Belt Squat"
+                class="w-full bg-zinc-800 rounded-xl p-3 text-white font-bold text-sm outline-none border border-zinc-700" />
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Muscle Group</label>
+                <select id="custom-ex-cat" class="w-full bg-zinc-800 rounded-xl p-3 text-white text-xs font-bold outline-none border border-zinc-700">
+                  <option value="CHEST">Chest</option>
+                  <option value="BACK">Back</option>
+                  <option value="SHOULDERS">Shoulders</option>
+                  <option value="LEGS">Legs</option>
+                  <option value="ARMS">Arms</option>
+                  <option value="CORE">Core</option>
+                  <option value="CARDIO">Cardio</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Tracking Type</label>
+                <select id="custom-ex-type" class="w-full bg-zinc-800 rounded-xl p-3 text-white text-xs font-bold outline-none border border-zinc-700">
+                  <option value="WEIGHT_REPS">Weight & Reps</option>
+                  <option value="BODYWEIGHT_REPS">Bodyweight Reps</option>
+                  <option value="DURATION">Duration (Time)</option>
+                  <option value="DISTANCE">Distance</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Form Notes / Setup Cues (Optional)</label>
+              <textarea id="custom-ex-notes" rows="2" placeholder="e.g. Set pins at height 4, wide stance..."
+                class="w-full bg-zinc-800 rounded-xl p-2.5 text-white text-xs outline-none border border-zinc-700"></textarea>
+            </div>
+          </div>
+
+          <button data-a="save-custom-ex" class="w-full py-4 text-sm font-black uppercase tracking-widest text-white accent-bg rounded-xl">
+            CREATE EXERCISE
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // MODAL: ADD EXERCISE (Search & Select)
+  // -------------------------------------------------------
+  function renderAddExerciseModal() {
+    const all = window.BURN_STORAGE.getAllExercises();
+    const q = (state.addExerciseModal.search || "").toUpperCase().trim();
+    const filtered = all.filter(ex => ex.name.toUpperCase().includes(q));
+
+    return `
+      <div class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end">
+        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[85vh] flex flex-col space-y-3.5">
+          <div class="flex justify-between items-center pb-1">
+            <h3 class="font-black text-base uppercase tracking-tight text-white">ADD EXERCISE</h3>
+            <button data-a="close-add-ex-modal" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">DONE</button>
+          </div>
+
+          <input id="add-modal-search" type="text" placeholder="Search exercises..." value="${escapeAttr(state.addExerciseModal.search)}"
+            class="w-full bg-zinc-800 rounded-xl p-3 text-white font-bold text-sm outline-none border border-zinc-700 focus:border-blue-500" />
+
+          <div class="overflow-y-auto max-h-[50vh] pr-1 space-y-1">
+            ${filtered.map(ex => `
+              <button data-a="select-add-exercise" data-name="${escapeAttr(ex.name)}"
+                class="w-full text-left py-3 px-3.5 border-b border-zinc-800 text-xs font-bold uppercase tracking-wider hover:bg-zinc-800 text-zinc-300 hover:text-white transition flex items-center justify-between">
+                <span>+ ${escapeHtml(ex.name)}</span>
+                <span class="text-[9px] text-zinc-500 font-mono">${escapeHtml(ex.category)}</span>
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // MODAL: MEASUREMENT ENTRY
+  // -------------------------------------------------------
+  function renderMeasurementModal() {
+    const today = new Date().toISOString().split("T")[0];
+
+    return `
+      <div class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end">
+        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[85vh] flex flex-col space-y-4">
+          <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
+            <h3 class="font-black text-base uppercase tracking-tight text-white">LOG BODY METRICS</h3>
+            <button data-a="close-measure-modal" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">CLOSE</button>
+          </div>
+
+          <div class="space-y-3">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Body Weight (KG)</label>
+                <input id="m-weight" type="number" step="0.1" placeholder="75.0"
+                  class="w-full bg-zinc-800 rounded-xl p-3 text-white font-mono font-bold text-sm outline-none border border-zinc-700" />
+              </div>
+              <div>
+                <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Body Fat (%)</label>
+                <input id="m-fat" type="number" step="0.1" placeholder="15.0"
+                  class="w-full bg-zinc-800 rounded-xl p-3 text-white font-mono font-bold text-sm outline-none border border-zinc-700" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Chest (CM)</label>
+                <input id="m-chest" type="number" step="0.5" placeholder="102"
+                  class="w-full bg-zinc-800 rounded-xl p-3 text-white font-mono font-bold text-sm outline-none border border-zinc-700" />
+              </div>
+              <div>
+                <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Waist (CM)</label>
+                <input id="m-waist" type="number" step="0.5" placeholder="82"
+                  class="w-full bg-zinc-800 rounded-xl p-3 text-white font-mono font-bold text-sm outline-none border border-zinc-700" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Arms (CM)</label>
+                <input id="m-arms" type="number" step="0.5" placeholder="38"
+                  class="w-full bg-zinc-800 rounded-xl p-3 text-white font-mono font-bold text-sm outline-none border border-zinc-700" />
+              </div>
+              <div>
+                <label class="text-[9px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Thighs (CM)</label>
+                <input id="m-thighs" type="number" step="0.5" placeholder="58"
+                  class="w-full bg-zinc-800 rounded-xl p-3 text-white font-mono font-bold text-sm outline-none border border-zinc-700" />
+              </div>
+            </div>
+          </div>
+
+          <button data-a="save-measurements" class="w-full py-4 text-sm font-black uppercase tracking-widest text-white accent-bg rounded-xl">
+            SAVE METRICS
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // MODAL: SETTINGS & SMART CONTEXT MODES
+  // -------------------------------------------------------
+  function renderSettingsModal() {
+    const s = state.settings;
+
+    return `
+      <div class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex flex-col justify-end">
+        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[85vh] flex flex-col space-y-4">
+          <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
+            <h3 class="font-black text-base uppercase tracking-tight text-white">APP SETTINGS</h3>
+            <button data-a="close-settings" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">CLOSE</button>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Smart Context Modes for PREVIOUS column -->
+            <div class="bg-black/50 p-3.5 rounded-xl border border-zinc-800 space-y-2">
+              <span class="text-xs font-black uppercase tracking-wider text-blue-400 block">PREVIOUS COLUMN CONTEXT MODE</span>
+              <p class="text-[10px] text-zinc-400 leading-relaxed">Choose how BURN looks up your past sets and weights when showing the inline PREVIOUS column:</p>
+
+              <div class="space-y-2 pt-1">
+                <label class="flex items-start gap-2.5 cursor-pointer">
+                  <input type="radio" name="contextMode" value="GLOBAL" ${s.contextMode === "GLOBAL" ? "checked" : ""} class="mt-1 accent-blue-500" />
+                  <div>
+                    <span class="text-xs font-bold text-white block">All Workouts (Global)</span>
+                    <span class="text-[10px] text-zinc-500 block">Pulls your latest performed numbers for that exercise regardless of routine.</span>
+                  </div>
+                </label>
+
+                <label class="flex items-start gap-2.5 cursor-pointer">
+                  <input type="radio" name="contextMode" value="SAME_ROUTINE" ${s.contextMode === "SAME_ROUTINE" ? "checked" : ""} class="mt-1 accent-blue-500" />
+                  <div>
+                    <span class="text-xs font-bold text-white block">Same Routine Only</span>
+                    <span class="text-[10px] text-zinc-500 block">Pulls numbers strictly from the last time you completed this exact routine split.</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Default Rest Timer -->
+            <div>
+              <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Default Rest Timer Duration</label>
+              <select id="setting-rest-timer" class="w-full bg-zinc-800 rounded-xl p-3 text-white text-xs font-bold outline-none border border-zinc-700">
+                <option value="60" ${s.defaultRestSeconds === 60 ? "selected" : ""}>60 seconds (1 min)</option>
+                <option value="90" ${s.defaultRestSeconds === 90 ? "selected" : ""}>90 seconds (1.5 min)</option>
+                <option value="120" ${s.defaultRestSeconds === 120 ? "selected" : ""}>120 seconds (2 mins)</option>
+                <option value="180" ${s.defaultRestSeconds === 180 ? "selected" : ""}>180 seconds (3 mins - Heavy Compound)</option>
+              </select>
+            </div>
+          </div>
+
+          <button data-a="save-app-settings" class="w-full py-4 text-sm font-black uppercase tracking-widest text-white accent-bg rounded-xl">
+            SAVE SETTINGS
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // MODAL: WORKOUT SUMMARY (NO CALORIES, DETAILED EXERCISES)
+  // -------------------------------------------------------
+  function renderSummaryModal() {
+    const s = state.summaryModal.session;
+    if (!s) return "";
+
+    return `
+      <div class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex flex-col justify-end">
+        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[88vh] flex flex-col space-y-4">
+          <div class="flex justify-between items-start border-b border-zinc-800 pb-2">
+            <div>
+              <span class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest block">SESSION COMPLETED</span>
+              <h3 class="font-black text-xl uppercase tracking-tight text-white">${escapeHtml(s.routineName)}</h3>
+            </div>
+            <button data-a="close-summary" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">DONE</button>
+          </div>
+
+          <div class="overflow-y-auto space-y-4 pr-1">
+            <!-- Core Workload Metrics (No Calorie Counter!) -->
+            <div class="grid grid-cols-3 gap-2 bg-black/60 p-3.5 rounded-2xl border border-zinc-800 text-center">
+              <div>
+                <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest block">TOTAL VOLUME</span>
+                <span class="text-lg font-black text-blue-400 font-mono">${s.totalVolumeKg ? `${s.totalVolumeKg.toLocaleString()} kg` : "—"}</span>
+              </div>
+              <div>
+                <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest block">SETS LOGGED</span>
+                <span class="text-lg font-black text-white font-mono">${s.totalSets || 0}</span>
+              </div>
+              <div>
+                <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest block">DURATION</span>
+                <span class="text-lg font-black text-emerald-400 font-mono">${s.duration} min</span>
+              </div>
+            </div>
+
+            <!-- Targeted Muscles Involved -->
             <div class="space-y-1.5">
-              <h4 class="text-xs font-bold text-zinc-300 uppercase">Performance Summary</h4>
+              <span class="text-xs font-black uppercase text-zinc-400 block">TARGETED MUSCLE GROUPS</span>
+              <div class="flex flex-wrap gap-1.5">
+                ${(s.targetedMuscles || []).map(m => `
+                  <span class="text-[10px] font-bold bg-zinc-800 border border-zinc-700 text-zinc-200 px-2.5 py-1 rounded-lg">${escapeHtml(m)}</span>
+                `).join("")}
+              </div>
+            </div>
+
+            <!-- Full Exercise Breakdown with Names, Reps & Weights -->
+            <div class="space-y-2">
+              <span class="text-xs font-black uppercase text-zinc-400 block">EXERCISES & COMPLETED SETS</span>
+              <div class="space-y-2">
+                ${(s.exercises || []).map(ex => {
+                  const completed = (ex.sets || []).filter(st => st.completed || st.reps > 0);
+                  return `
+                    <div class="bg-black/50 border border-zinc-800/80 p-3 rounded-xl space-y-1.5">
+                      <div class="flex justify-between items-center">
+                        <span class="font-black text-xs text-white uppercase">${escapeHtml(ex.name)}</span>
+                        <span class="text-[9px] font-bold text-blue-400 uppercase">${escapeHtml(ex.category)}</span>
+                      </div>
+                      <div class="grid grid-cols-2 sm:grid-cols-3 gap-1 text-[10px] font-mono">
+                        ${completed.map((st, idx) => `
+                          <div class="bg-zinc-900 px-2 py-1 rounded border border-zinc-800 flex justify-between text-zinc-300">
+                            <span>Set ${st.setNum || (idx + 1)}:</span>
+                            <span class="font-bold text-white">${st.weight}kg × ${st.reps}</span>
+                          </div>
+                        `).join("")}
+                      </div>
+                      ${ex.note ? `<p class="text-[10px] text-zinc-400 italic">"${escapeHtml(ex.note)}"</p>` : ""}
+                    </div>
+                  `;
+                }).join("")}
+              </div>
+            </div>
+
+            <!-- Dynamic Biomechanical Analysis -->
+            <div class="space-y-1.5">
+              <span class="text-xs font-black uppercase text-zinc-400 block">BIOMECHANICAL PERFORMANCE ANALYSIS</span>
+              <div class="text-xs text-zinc-300 bg-black/40 p-3.5 rounded-xl border border-zinc-800 leading-relaxed font-normal">
+                ${escapeHtml(s.detailedSummary)}
+              </div>
+            </div>
+
+            <!-- 48-Hour Recovery Guidelines -->
+            <div class="space-y-1.5">
+              <span class="text-xs font-black uppercase text-zinc-400 block">48-HOUR RECOVERY PROTOCOL</span>
+              <ul class="space-y-1.5 bg-black/40 p-3 rounded-xl border border-zinc-800 text-xs text-zinc-300">
+                ${(s.recoveryNext48Hours || []).map(r => `
+                  <li class="flex items-start gap-1.5">
+                    <span class="text-blue-400 font-bold">•</span>
+                    <span>${escapeHtml(r)}</span>
+                  </li>
+                `).join("")}
+              </ul>
+            </div>
+          </div>
+
+          <button data-a="close-summary" class="w-full py-4 text-sm font-black uppercase tracking-widest text-white accent-bg rounded-xl">
+            RETURN TO DASHBOARD
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  // -------------------------------------------------------
+  // MODAL: 30-DAY HISTORY DETAIL
+  // -------------------------------------------------------
+  function renderHistoryDetailModal(entry) {
+    return `
+      <div class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 flex flex-col justify-end">
+        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[88vh] flex flex-col space-y-4">
+          <div class="flex justify-between items-start border-b border-zinc-800 pb-2">
+            <div>
+              <span class="text-[10px] font-mono text-blue-400">${entry.dateKey}</span>
+              <h3 class="font-black text-lg uppercase tracking-tight text-white">${escapeHtml(entry.routineName)}</h3>
+            </div>
+            <button data-a="close-history-detail" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">CLOSE</button>
+          </div>
+
+          <div class="overflow-y-auto space-y-4 pr-1">
+            <!-- Stats Bar -->
+            <div class="grid grid-cols-3 gap-2 bg-black/60 p-3 rounded-xl border border-zinc-800 text-center">
+              <div>
+                <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest block">VOLUME</span>
+                <span class="text-base font-black text-blue-400 font-mono">${entry.totalVolumeKg ? `${entry.totalVolumeKg.toLocaleString()} kg` : "—"}</span>
+              </div>
+              <div>
+                <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest block">SETS</span>
+                <span class="text-base font-black text-white font-mono">${entry.totalSets || 0}</span>
+              </div>
+              <div>
+                <span class="text-[8px] font-bold text-zinc-500 uppercase tracking-widest block">DURATION</span>
+                <span class="text-base font-black text-emerald-400 font-mono">${entry.duration} min</span>
+              </div>
+            </div>
+
+            <!-- Full Exercise Details List -->
+            <div class="space-y-2">
+              <span class="text-xs font-black uppercase text-zinc-400 block">EXERCISES COMPLETED</span>
+              <div class="space-y-2">
+                ${(entry.exercises || []).map(ex => {
+                  const completed = (ex.sets || []).filter(st => st.completed || st.reps > 0);
+                  return `
+                    <div class="bg-black/50 border border-zinc-800 p-3 rounded-xl space-y-1.5">
+                      <div class="flex justify-between items-center">
+                        <span class="font-black text-xs text-white uppercase">${escapeHtml(ex.name)}</span>
+                        <span class="text-[9px] font-bold text-blue-400 uppercase">${escapeHtml(ex.category)}</span>
+                      </div>
+                      <div class="flex flex-wrap gap-1 text-[10px] font-mono">
+                        ${completed.map((st, idx) => `
+                          <span class="bg-zinc-900 border border-zinc-800 px-2 py-0.5 rounded text-zinc-300">
+                            Set ${st.setNum || (idx + 1)}: <strong class="text-white">${st.weight}kg × ${st.reps}</strong>
+                          </span>
+                        `).join("")}
+                      </div>
+                      ${ex.note ? `<p class="text-[10px] text-zinc-400 italic">"${escapeHtml(ex.note)}"</p>` : ""}
+                    </div>
+                  `;
+                }).join("")}
+              </div>
+            </div>
+
+            <!-- Detailed Summary -->
+            <div class="space-y-1.5">
+              <span class="text-xs font-black uppercase text-zinc-400 block">PERFORMANCE SUMMARY</span>
               <div class="text-xs text-zinc-300 bg-black/40 p-3.5 rounded-xl border border-zinc-800 leading-relaxed">
                 ${escapeHtml(entry.detailedSummary)}
               </div>
@@ -1511,375 +1418,469 @@ Return ONLY raw JSON with keys "calories" (number), "targetedMuscles" (array of 
   }
 
   // -------------------------------------------------------
-  // ADD WORKOUT MODAL
-  // -------------------------------------------------------
-  function renderAddWorkoutModal() {
-    const q = state.search.toUpperCase().trim();
-    const filtered = ALL_WORKOUTS.filter(x => x.includes(q));
-
-    const items = filtered.map(item => `
-      <button data-a="add-extra" data-ex="${escapeAttr(item)}"
-        class="w-full text-left py-3 px-3.5 border-b border-zinc-800/80 text-xs font-bold uppercase tracking-wider hover:bg-zinc-800 text-zinc-300 hover:text-white transition flex items-center justify-between">
-        <span>+ ${escapeHtml(item)}</span>
-        <span class="text-[9px] text-zinc-500 font-mono">${isAbExercise(item) ? "ABS" : getExerciseCategory(item)}</span>
-      </button>
-    `).join("");
-
-    return `
-      <div class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col justify-end">
-        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[85vh] flex flex-col space-y-3.5">
-          <div class="flex justify-between items-center pb-1">
-            <div>
-              <h3 class="font-black text-base uppercase tracking-tight text-white">ADD EXERCISE</h3>
-              <p id="search-count" class="text-[10px] text-zinc-400 font-bold uppercase tracking-widest">${filtered.length} Exercises found</p>
-            </div>
-            <button data-a="close-add-modal" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">
-              DONE
-            </button>
-          </div>
-
-          <input id="modal-search" type="text" placeholder="Search exercises..." value="${escapeAttr(state.search)}"
-            class="w-full bg-zinc-800 rounded-xl p-3 text-white font-bold text-sm outline-none border border-zinc-700 focus:border-blue-500" />
-
-          <div id="modal-search-list" class="overflow-y-auto max-h-[50vh] pr-1 space-y-1">
-            ${items.length ? items : `<p class="text-xs text-zinc-500 py-6 text-center">No exercises matching query</p>`}
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  // -------------------------------------------------------
-  // USER PROFILE MODAL
-  // -------------------------------------------------------
-  function renderProfileModal() {
-    return `
-      <div class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col justify-end">
-        <div class="bg-zinc-900 border-t border-zinc-800 p-5 rounded-t-3xl max-h-[85vh] flex flex-col space-y-4">
-          <div class="flex justify-between items-center pb-2 border-b border-zinc-800">
-            <h3 class="font-black text-base uppercase tracking-tight text-white">ATHLETE BIOMETRIC SETTINGS</h3>
-            <button data-a="close-profile" class="text-xs font-bold text-zinc-400 hover:text-white px-3 py-1.5 bg-zinc-800 rounded-lg">
-              CLOSE
-            </button>
-          </div>
-
-          <div class="space-y-3.5">
-            <div>
-              <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Athlete Name</label>
-              <input id="edit-name" type="text" value="${escapeAttr(state.profile?.name || "Athlete")}"
-                class="w-full bg-zinc-800 rounded-xl p-3 text-white font-bold text-sm outline-none border border-zinc-700" />
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Height (CM)</label>
-                <input id="edit-height" type="number" value="${state.profile?.height || "175"}"
-                  class="w-full bg-zinc-800 rounded-xl p-3 text-white font-mono font-bold text-sm outline-none border border-zinc-700" />
-              </div>
-              <div>
-                <label class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-1">Date of Birth</label>
-                <input id="edit-dob" type="date" value="${state.profile?.dob || "2000-01-01"}"
-                  class="w-full bg-zinc-800 rounded-xl p-2.5 text-white font-mono font-bold text-sm outline-none border border-zinc-700" />
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-2">
-            <button data-a="save-edited-profile" class="w-full py-4 text-sm font-black tracking-widest text-white accent-bg rounded-xl uppercase">
-              SAVE CHANGES
-            </button>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  // -------------------------------------------------------
-  // GLOBAL DELEGATED EVENT LISTENER
+  // EVENT DELEGATION
   // -------------------------------------------------------
   let eventsBound = false;
   function bindEvents() {
     if (eventsBound) return;
     eventsBound = true;
 
-    // 1. Click / Tap Delegation
+    // Click Delegation
     document.addEventListener("click", (e) => {
-      const actionEl = e.target.closest("[data-a]");
-      if (!actionEl) return;
+      const el = e.target.closest("[data-a]");
+      if (!el) return;
+      const a = el.getAttribute("data-a");
 
-      const action = actionEl.getAttribute("data-a");
-
-      if (action === "save-profile") {
-        const name = (root.querySelector("#prof-name")?.value || "").trim() || "Athlete";
-        const height = Number(root.querySelector("#prof-height")?.value) || 175;
-        const dob = root.querySelector("#prof-dob")?.value || "2000-01-01";
-        state.profile = { name, height, dob };
-        saveProfile(state.profile);
-        state.step = "WELCOME";
+      // Tabs
+      if (a === "switch-tab") {
+        state.currentTab = el.getAttribute("data-tab");
         render();
         return;
       }
 
-      if (action === "skip-profile") {
-        state.step = "WELCOME";
-        render();
+      // Start Workout
+      if (a === "start-routine") {
+        const rId = el.getAttribute("data-id");
+        const routine = window.BURN_STORAGE.getRoutines().find(r => r.id === rId);
+        if (routine) {
+          startWorkoutFromRoutine(routine);
+        }
         return;
       }
 
-      if (action === "save-edited-profile") {
-        const name = (root.querySelector("#edit-name")?.value || "").trim() || "Athlete";
-        const height = Number(root.querySelector("#edit-height")?.value) || 175;
-        const dob = root.querySelector("#edit-dob")?.value || "2000-01-01";
-        state.profile = { name, height, dob };
-        saveProfile(state.profile);
-        state.profileModalOpen = false;
-        render();
+      // Finish Workout
+      if (a === "finish-workout") {
+        finishActiveWorkout();
         return;
       }
 
-      if (action === "select-day") {
-        state.selectedDayNum = Number(actionEl.getAttribute("data-day"));
-        state.addedExtras = [];
-        state.logs = {};
-        render();
-        return;
-      }
-
-      if (action === "go") {
-        state.step = "WEIGHT";
-        render();
-        return;
-      }
-
-      if (action === "back-to-welcome") {
-        state.step = "WELCOME";
-        render();
-        return;
-      }
-
-      if (action === "start") {
-        if (state.userWeight > 0) {
-          state.step = "LIST";
+      // Cancel Workout
+      if (a === "cancel-workout") {
+        if (confirm("Discard current active workout?")) {
+          state.activeWorkout = null;
+          window.BURN_TIMER.stop();
           render();
         }
         return;
       }
 
-      if (action === "proceed") {
-        state.step = "DURATION";
-        render();
-        return;
-      }
+      // Complete Set (Tick button) -> Triggers Rest Timer!
+      if (a === "toggle-complete-set") {
+        const exIdx = Number(el.getAttribute("data-exidx"));
+        const setIdx = Number(el.getAttribute("data-setidx"));
+        const set = state.activeWorkout?.exercises?.[exIdx]?.sets?.[setIdx];
+        if (set) {
+          set.completed = !set.completed;
+          if (set.completed) {
+            // Check if PR
+            const exName = state.activeWorkout.exercises[exIdx].name;
+            const isPR = window.BURN_STORAGE.checkIfSetIsPR(exName, set.weight, set.reps);
+            set.isPR = isPR;
 
-      if (action === "back-to-list") {
-        state.step = "LIST";
-        render();
-        return;
-      }
-
-      if (action === "calc") {
-        if (state.duration > 0 && !state.isCalculating) {
-          calculateWithGemini();
-        }
-        return;
-      }
-
-      if (action === "close-session") {
-        state.step = "WELCOME";
-        state.result = null;
-        state.duration = 0;
-        state.addedExtras = [];
-        state.logs = {};
-        render();
-        return;
-      }
-
-      if (action === "toggle-mode") {
-        const ex = actionEl.getAttribute("data-ex");
-        if (state.logs[ex]) {
-          state.logs[ex].mode = state.logs[ex].mode === "REPS" ? "SECS" : "REPS";
+            // Start Automated Rest Timer!
+            const restSeconds = state.activeWorkout.exercises[exIdx].restTimerSeconds || state.settings.defaultRestSeconds || 90;
+            window.BURN_TIMER.start(restSeconds);
+          }
           render();
         }
         return;
       }
 
-      if (action === "open-add-modal") {
-        state.modalOpen = true;
-        state.search = "";
-        render();
-        return;
-      }
-
-      if (action === "close-add-modal") {
-        state.modalOpen = false;
-        render();
-        return;
-      }
-
-      if (action === "add-extra") {
-        const ex = actionEl.getAttribute("data-ex");
-        if (!state.addedExtras.includes(ex)) {
-          state.addedExtras.push(ex);
-          state.logs[ex] = createLogForExercise(ex);
-        }
-        state.modalOpen = false;
-        render();
-        return;
-      }
-
-      if (action === "open-history") {
-        state.historyModalOpen = true;
-        render();
-        return;
-      }
-
-      if (action === "close-history") {
-        state.historyModalOpen = false;
-        render();
-        return;
-      }
-
-      if (action === "view-history-detail") {
-        const key = actionEl.getAttribute("data-key");
-        const map = getHistoryMap();
-        if (map[key]) {
-          state.viewingHistoryDetail = { dateKey: key, ...map[key] };
+      // Cycle Set Type (Normal -> Warmup -> Drop -> Failure -> Normal)
+      if (a === "cycle-set-type") {
+        const exIdx = Number(el.getAttribute("data-exidx"));
+        const setIdx = Number(el.getAttribute("data-setidx"));
+        const set = state.activeWorkout?.exercises?.[exIdx]?.sets?.[setIdx];
+        if (set) {
+          const types = ["NORMAL", "WARMUP", "DROP", "FAILURE"];
+          const currentIdx = types.indexOf(set.type || "NORMAL");
+          set.type = types[(currentIdx + 1) % types.length];
           render();
         }
         return;
       }
 
-      if (action === "close-history-detail") {
+      // One-Tap Quick Autofill from PREVIOUS column!
+      if (a === "autofill-previous") {
+        const exIdx = Number(el.getAttribute("data-exidx"));
+        const setIdx = Number(el.getAttribute("data-setidx"));
+        const ex = state.activeWorkout?.exercises?.[exIdx];
+        const prevSet = ex?.previous?.sets?.[setIdx];
+        if (ex && prevSet) {
+          ex.sets[setIdx].weight = prevSet.weight;
+          ex.sets[setIdx].reps = prevSet.reps;
+          render();
+        }
+        return;
+      }
+
+      // Add Set
+      if (a === "add-set") {
+        const exIdx = Number(el.getAttribute("data-exidx"));
+        const ex = state.activeWorkout?.exercises?.[exIdx];
+        if (ex) {
+          const prevSet = ex.sets[ex.sets.length - 1];
+          ex.sets.push({
+            id: `s_${Date.now()}_${ex.sets.length + 1}`,
+            setNum: ex.sets.length + 1,
+            type: "NORMAL",
+            weight: prevSet?.weight || "",
+            reps: prevSet?.reps || "",
+            completed: false,
+            isPR: false
+          });
+          render();
+        }
+        return;
+      }
+
+      // Remove Exercise from Live Workout
+      if (a === "remove-exercise") {
+        const exIdx = Number(el.getAttribute("data-exidx"));
+        if (state.activeWorkout) {
+          state.activeWorkout.exercises.splice(exIdx, 1);
+          render();
+        }
+        return;
+      }
+
+      // Rest Timer Controls
+      if (a === "timer-minus") {
+        window.BURN_TIMER.addSeconds(-15);
+        return;
+      }
+      if (a === "timer-plus") {
+        window.BURN_TIMER.addSeconds(15);
+        return;
+      }
+      if (a === "timer-skip") {
+        window.BURN_TIMER.stop();
+        window.BURN_TIMER.updateUI();
+        return;
+      }
+
+      // Plate Calculator
+      if (a === "open-plate-calc") {
+        state.plateModal.open = true;
+        render();
+        return;
+      }
+      if (a === "close-plate-calc") {
+        state.plateModal.open = false;
+        render();
+        return;
+      }
+      if (a === "calc-plates-for-ex") {
+        const exIdx = Number(el.getAttribute("data-exidx"));
+        const ex = state.activeWorkout?.exercises?.[exIdx];
+        const maxSetWeight = ex?.sets?.reduce((max, s) => Math.max(max, Number(s.weight) || 0), 0) || 60;
+        state.plateModal.targetWeight = maxSetWeight || 60;
+        state.plateModal.open = true;
+        render();
+        return;
+      }
+
+      // Exercise History / Detail Modal
+      if (a === "open-ex-history") {
+        const name = el.getAttribute("data-name");
+        state.exerciseDetailModal.exerciseName = name;
+        state.exerciseDetailModal.activeMetric = "MAX_WEIGHT";
+        state.exerciseDetailModal.open = true;
+        render();
+        return;
+      }
+      if (a === "close-ex-history") {
+        state.exerciseDetailModal.open = false;
+        render();
+        return;
+      }
+      if (a === "switch-chart-metric") {
+        state.exerciseDetailModal.activeMetric = el.getAttribute("data-metric");
+        render();
+        return;
+      }
+
+      // Routine Editor
+      if (a === "open-new-routine") {
+        state.routineEditorModal = {
+          open: true,
+          isNew: true,
+          routine: { id: `routine_${Date.now()}`, name: "New Routine", split: "CUSTOM", exercises: [] }
+        };
+        render();
+        return;
+      }
+      if (a === "edit-routine") {
+        const rId = el.getAttribute("data-id");
+        const r = window.BURN_STORAGE.getRoutines().find(x => x.id === rId);
+        if (r) {
+          state.routineEditorModal = {
+            open: true,
+            isNew: false,
+            routine: JSON.parse(JSON.stringify(r))
+          };
+          render();
+        }
+        return;
+      }
+      if (a === "close-routine-editor") {
+        state.routineEditorModal.open = false;
+        render();
+        return;
+      }
+      if (a === "routine-remove-ex") {
+        const idx = Number(el.getAttribute("data-idx"));
+        state.routineEditorModal.routine.exercises.splice(idx, 1);
+        render();
+        return;
+      }
+      if (a === "save-routine") {
+        const name = (root.querySelector("#edit-routine-name")?.value || "").trim() || "Custom Routine";
+        state.routineEditorModal.routine.name = name;
+        window.BURN_STORAGE.saveRoutine(state.routineEditorModal.routine);
+        state.routineEditorModal.open = false;
+        render();
+        return;
+      }
+      if (a === "delete-routine") {
+        const rId = el.getAttribute("data-id");
+        if (confirm("Delete this routine?")) {
+          window.BURN_STORAGE.deleteRoutine(rId);
+          render();
+        }
+        return;
+      }
+
+      // Add Exercise Modal
+      if (a === "open-add-ex-workout") {
+        state.addExerciseModal = { open: true, search: "", targetType: "WORKOUT" };
+        render();
+        return;
+      }
+      if (a === "open-add-ex-routine") {
+        state.addExerciseModal = { open: true, search: "", targetType: "ROUTINE" };
+        render();
+        return;
+      }
+      if (a === "close-add-ex-modal") {
+        state.addExerciseModal.open = false;
+        render();
+        return;
+      }
+      if (a === "select-add-exercise") {
+        const name = el.getAttribute("data-name");
+        if (state.addExerciseModal.targetType === "WORKOUT" && state.activeWorkout) {
+          const dbEx = window.BURN_STORAGE.getAllExercises().find(e => e.name.toUpperCase() === name.toUpperCase());
+          const previousData = window.BURN_STORAGE.getPreviousSetsForExercise(name, state.activeWorkout.routineId);
+          state.activeWorkout.exercises.push({
+            name,
+            category: dbEx?.category || "STRENGTH",
+            trackingType: dbEx?.trackingType || "WEIGHT_REPS",
+            note: "",
+            restTimerSeconds: 90,
+            sets: [
+              { id: `s_${Date.now()}_1`, setNum: 1, type: "NORMAL", weight: "", reps: "", completed: false, isPR: false },
+              { id: `s_${Date.now()}_2`, setNum: 2, type: "NORMAL", weight: "", reps: "", completed: false, isPR: false },
+              { id: `s_${Date.now()}_3`, setNum: 3, type: "NORMAL", weight: "", reps: "", completed: false, isPR: false }
+            ],
+            previous: previousData
+          });
+        } else if (state.addExerciseModal.targetType === "ROUTINE" && state.routineEditorModal.routine) {
+          if (!state.routineEditorModal.routine.exercises.includes(name)) {
+            state.routineEditorModal.routine.exercises.push(name);
+          }
+        }
+        state.addExerciseModal.open = false;
+        render();
+        return;
+      }
+
+      // Custom Exercise Creation
+      if (a === "open-custom-ex") {
+        state.customExerciseModal.open = true;
+        render();
+        return;
+      }
+      if (a === "close-custom-ex") {
+        state.customExerciseModal.open = false;
+        render();
+        return;
+      }
+      if (a === "save-custom-ex") {
+        const name = (root.querySelector("#custom-ex-name")?.value || "").trim();
+        const category = root.querySelector("#custom-ex-cat")?.value || "CHEST";
+        const trackingType = root.querySelector("#custom-ex-type")?.value || "WEIGHT_REPS";
+        const instructions = (root.querySelector("#custom-ex-notes")?.value || "").trim();
+
+        if (!name) {
+          alert("Please enter an exercise name");
+          return;
+        }
+
+        window.BURN_STORAGE.saveCustomExercise({
+          name,
+          category,
+          primary: category,
+          trackingType,
+          instructions
+        });
+
+        state.customExerciseModal.open = false;
+        render();
+        return;
+      }
+
+      // Measurement Modal
+      if (a === "open-measure-modal") {
+        state.measurementModal.open = true;
+        render();
+        return;
+      }
+      if (a === "close-measure-modal") {
+        state.measurementModal.open = false;
+        render();
+        return;
+      }
+      if (a === "save-measurements") {
+        const weightKg = root.querySelector("#m-weight")?.value || "";
+        const bodyFat = root.querySelector("#m-fat")?.value || "";
+        const chestCm = root.querySelector("#m-chest")?.value || "";
+        const waistCm = root.querySelector("#m-waist")?.value || "";
+        const armsCm = root.querySelector("#m-arms")?.value || "";
+        const thighsCm = root.querySelector("#m-thighs")?.value || "";
+
+        window.BURN_STORAGE.addMeasurement({
+          weightKg,
+          bodyFat,
+          chestCm,
+          waistCm,
+          armsCm,
+          thighsCm
+        });
+
+        state.measurementModal.open = false;
+        render();
+        return;
+      }
+
+      // Settings Modal
+      if (a === "open-settings") {
+        state.settingsModal.open = true;
+        render();
+        return;
+      }
+      if (a === "close-settings") {
+        state.settingsModal.open = false;
+        render();
+        return;
+      }
+      if (a === "save-app-settings") {
+        const modeEl = root.querySelector('input[name="contextMode"]:checked');
+        const restEl = root.querySelector("#setting-rest-timer");
+        state.settings.contextMode = modeEl ? modeEl.value : "GLOBAL";
+        state.settings.defaultRestSeconds = Number(restEl?.value) || 90;
+        window.BURN_STORAGE.saveSettings(state.settings);
+        state.settingsModal.open = false;
+        render();
+        return;
+      }
+
+      // Summary & History Detail Modals
+      if (a === "close-summary") {
+        state.summaryModal.open = false;
+        state.currentTab = "HISTORY";
+        render();
+        return;
+      }
+      if (a === "view-history-detail") {
+        const id = el.getAttribute("data-id");
+        const session = window.BURN_STORAGE.getPast30DaysSessions().find(x => x.id === id);
+        if (session) {
+          state.viewingHistoryDetail = session;
+          render();
+        }
+        return;
+      }
+      if (a === "close-history-detail") {
         state.viewingHistoryDetail = null;
         render();
         return;
       }
-
-      if (action === "open-profile") {
-        state.profileModalOpen = true;
-        render();
-        return;
-      }
-
-      if (action === "close-profile") {
-        state.profileModalOpen = false;
-        render();
-        return;
-      }
     });
 
-    // 2. Input / Change Delegation
+    // Input Delegation
     document.addEventListener("input", (e) => {
       const target = e.target;
-      const id = target.id;
-      const action = target.getAttribute("data-a");
-      const ex = target.getAttribute("data-ex");
+      const a = target.getAttribute("data-a");
 
-      if (id === "w") {
-        state.userWeight = Number(target.value) || 0;
-        const btn = document.getElementById("startBtn");
-        if (btn) {
-          if (state.userWeight > 0) {
-            btn.className = "w-full py-5 text-lg font-black tracking-widest text-white hover:brightness-110 accent-bg shadow-lg shadow-blue-950/40 rounded-xl transition-all";
-          } else {
-            btn.className = "w-full py-5 text-lg font-black tracking-widest text-zinc-700 bg-zinc-900 cursor-not-allowed rounded-xl transition-all";
-          }
+      if (a === "set-weight") {
+        const exIdx = Number(target.getAttribute("data-exidx"));
+        const setIdx = Number(target.getAttribute("data-setidx"));
+        const set = state.activeWorkout?.exercises?.[exIdx]?.sets?.[setIdx];
+        if (set) {
+          set.weight = target.value;
         }
         return;
       }
 
-      if (id === "d") {
-        state.duration = Number(target.value) || 0;
-        const btn = document.getElementById("calcBtn");
-        if (btn && !state.isCalculating) {
-          if (state.duration > 0) {
-            btn.className = "w-full py-5 font-black tracking-widest text-white hover:brightness-110 accent-bg shadow-lg shadow-blue-950/40 rounded-xl flex items-center justify-center gap-3 transition-all";
-          } else {
-            btn.className = "w-full py-5 font-black tracking-widest text-zinc-700 bg-zinc-900 cursor-not-allowed rounded-xl flex items-center justify-center gap-3 transition-all";
-          }
+      if (a === "set-reps") {
+        const exIdx = Number(target.getAttribute("data-exidx"));
+        const setIdx = Number(target.getAttribute("data-setidx"));
+        const set = state.activeWorkout?.exercises?.[exIdx]?.sets?.[setIdx];
+        if (set) {
+          set.reps = target.value;
         }
         return;
       }
 
-      if (id === "modal-search") {
-        state.search = target.value;
-        const q = state.search.toUpperCase().trim();
-        const filtered = ALL_WORKOUTS.filter(x => x.includes(q));
-        const listEl = document.getElementById("modal-search-list");
-        const countEl = document.getElementById("search-count");
-        if (countEl) countEl.innerText = `${filtered.length} Exercises found`;
+      if (a === "exercise-note") {
+        const exIdx = Number(target.getAttribute("data-exidx"));
+        const ex = state.activeWorkout?.exercises?.[exIdx];
+        if (ex) {
+          ex.note = target.value;
+        }
+        return;
+      }
+
+      if (target.id === "plate-target-input") {
+        state.plateModal.targetWeight = Number(target.value) || 0;
+        render();
+        return;
+      }
+
+      if (target.id === "add-modal-search") {
+        state.addExerciseModal.search = target.value;
+        render();
+        return;
+      }
+
+      if (target.id === "lib-search") {
+        const q = target.value.toUpperCase().trim();
+        const all = window.BURN_STORAGE.getAllExercises();
+        const filtered = all.filter(ex => ex.name.toUpperCase().includes(q));
+        const listEl = document.getElementById("lib-list");
         if (listEl) {
-          listEl.innerHTML = filtered.length ? filtered.map(item => `
-            <button data-a="add-extra" data-ex="${escapeAttr(item)}"
-              class="w-full text-left py-3 px-3.5 border-b border-zinc-800/80 text-xs font-bold uppercase tracking-wider hover:bg-zinc-800 text-zinc-300 hover:text-white transition flex items-center justify-between">
-              <span>+ ${escapeHtml(item)}</span>
-              <span class="text-[9px] text-zinc-500 font-mono">${isAbExercise(item) ? "ABS" : getExerciseCategory(item)}</span>
+          listEl.innerHTML = filtered.map(ex => `
+            <button data-a="open-ex-history" data-name="${escapeAttr(ex.name)}"
+              class="w-full text-left bg-zinc-900/60 hover:bg-zinc-800 border border-zinc-800/80 p-3 rounded-xl flex items-center justify-between transition group">
+              <div class="min-w-0 pr-2">
+                <h4 class="font-bold text-sm text-white tracking-tight group-hover:text-blue-400 transition truncate">${escapeHtml(ex.name)}</h4>
+                <span class="text-[9px] font-bold text-zinc-500 uppercase tracking-wider">${escapeHtml(ex.category)} • ${escapeHtml(ex.primary || "Strength")}</span>
+              </div>
+              <svg class="w-4 h-4 text-zinc-600 group-hover:text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
             </button>
-          `).join("") : `<p class="text-xs text-zinc-500 py-6 text-center">No exercises matching "${escapeHtml(state.search)}"</p>`;
+          `).join("");
         }
-        return;
-      }
-
-      if (action === "str-val" && ex && state.logs[ex]) {
-        state.logs[ex].value = Number(target.value) || 0;
-        return;
-      }
-
-      if (action === "str-wt" && ex && state.logs[ex]) {
-        state.logs[ex].weight = Number(target.value) || 0;
-        return;
-      }
-
-      if (action === "sport-mins" && ex && state.logs[ex]) {
-        state.logs[ex].mins = Number(target.value) || 0;
-        return;
-      }
-
-      if (action === "sport-diff" && ex && state.logs[ex]) {
-        state.logs[ex].difficulty = Number(target.value) || 7;
-        const label = target.parentElement?.querySelector(".text-white");
-        if (label) label.innerText = `${state.logs[ex].difficulty} / 10`;
-        return;
-      }
-
-      if (action === "run-mins" && ex && state.logs[ex]) {
-        state.logs[ex].mins = Number(target.value) || 0;
-        return;
-      }
-
-      if (action === "run-km" && ex && state.logs[ex]) {
-        state.logs[ex].distanceKm = Number(target.value) || 0;
-        return;
-      }
-
-      if (action === "cardio-mins" && ex && state.logs[ex]) {
-        state.logs[ex].mins = Number(target.value) || 0;
-        return;
-      }
-
-      if (action === "cardio-diff" && ex && state.logs[ex]) {
-        state.logs[ex].difficulty = Number(target.value) || 6;
-        return;
-      }
-
-      if (action === "iso-secs" && ex && state.logs[ex]) {
-        state.logs[ex].secs = Number(target.value) || 0;
-        return;
-      }
-
-      if (action === "iso-diff" && ex && state.logs[ex]) {
-        state.logs[ex].difficulty = Number(target.value) || 6;
         return;
       }
     });
 
+    // Change Delegation
     document.addEventListener("change", (e) => {
       const target = e.target;
-      const action = target.getAttribute("data-a");
-      const ex = target.getAttribute("data-ex");
-
-      if (action === "sport-pos" && ex && state.logs[ex]) {
-        state.logs[ex].position = target.value;
+      if (target.id === "plate-bar-select") {
+        state.plateModal.barWeight = Number(target.value) || 20;
+        render();
       }
     });
   }
